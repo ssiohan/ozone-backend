@@ -93,6 +93,11 @@ class User
      */
     private $eventUsers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
+     */
+    private $userRoles;
+
     public function __construct()
     {
         // Récupère tous les événements créés par l'utilisateur
@@ -103,6 +108,7 @@ class User
         $this->experience = 0;
         $this->credit = 0;
         $this->eventUsers = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -322,6 +328,37 @@ class User
             // set the owning side to null (unless already changed)
             if ($eventUser->getUser() === $this) {
                 $eventUser->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserRole[]
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(UserRole $userRole): self
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles[] = $userRole;
+            $userRole->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(UserRole $userRole): self
+    {
+        if ($this->userRoles->contains($userRole)) {
+            $this->userRoles->removeElement($userRole);
+            // set the owning side to null (unless already changed)
+            if ($userRole->getUser() === $this) {
+                $userRole->setUser(null);
             }
         }
 
