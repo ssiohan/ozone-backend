@@ -103,7 +103,7 @@ class User
         // Récupère tous les événements créés par l'utilisateur
         $this->events = new ArrayCollection();
         
-        $this->createdAt = new \DateTime;
+        $this->created_at = new \DateTime;
         $this->status = true;
         $this->experience = 0;
         $this->credit = 0;

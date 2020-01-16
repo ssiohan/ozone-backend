@@ -94,12 +94,12 @@ class Event
     private $adress;
 
     /**
-     * @ORM\Column(type="decimal", precision=10, scale=8)
+     * @ORM\Column(type="string")
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="decimal", precision=11, scale=8)
+     * @ORM\Column(type="string")
      */
     private $longitude;
 
@@ -116,7 +116,7 @@ class Event
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime;
+        $this->created_at = new \DateTime;
         $this->status = "Planifié";
         $this->eventUsers = new ArrayCollection();
     }
@@ -306,36 +306,36 @@ class Event
         return $this;
     }
 
-    public function getLatitude(): ?int
+    public function getLatitude(): ?string
     {
         return $this->latitude;
     }
 
-    public function setLatitude(int $latitude): self
+    public function setLatitude(string $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?int
+    public function getLongitude(): ?string
     {
         return $this->longitude;
     }
 
-    public function setLongitude(int $longitude): self
+    public function setLongitude(string $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserId(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUserId(?User $user): self
     {
         $this->user = $user;
 
