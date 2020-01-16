@@ -10,7 +10,7 @@ Pour chaque feature on créé une branche nommée soit `frontend_feature-xxx` ou
 
 Le lead front aura pour rôle de merge les branches `frontend_feature-xxx` dans la branche `frontend`
 
-Le lead back aura pour rôle de merge les `backend_feature-xxx` dans la branche `backend`
+Le lead back aura pour rôle de merge les branches `backend_feature-xxx` dans la branche `backend`
 
 Les branches `frontend` et `backend` devront toujours être fonctionnelles.
 
