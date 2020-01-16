@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -107,10 +109,16 @@ class Event
      */
     private $user_id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
+     */
+    private $eventUsers;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime;
         $this->status = "Planifié";
+        $this->eventUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +338,37 @@ class Event
     public function setUserId(?User $user_id): self
     {
         $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EventUser[]
+     */
+    public function getEventUsers(): Collection
+    {
+        return $this->eventUsers;
+    }
+
+    public function addEventUser(EventUser $eventUser): self
+    {
+        if (!$this->eventUsers->contains($eventUser)) {
+            $this->eventUsers[] = $eventUser;
+            $eventUser->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventUser(EventUser $eventUser): self
+    {
+        if ($this->eventUsers->contains($eventUser)) {
+            $this->eventUsers->removeElement($eventUser);
+            // set the owning side to null (unless already changed)
+            if ($eventUser->getEvent() === $this) {
+                $eventUser->setEvent(null);
+            }
+        }
 
         return $this;
     }

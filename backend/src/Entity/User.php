@@ -88,6 +88,11 @@ class User
      */
     private $events;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="user", orphanRemoval=true)
+     */
+    private $eventUsers;
+
     public function __construct()
     {
         // Récupère tous les événements créés par l'utilisateur
@@ -97,6 +102,7 @@ class User
         $this->status = true;
         $this->experience = 0;
         $this->credit = 0;
+        $this->eventUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -285,6 +291,37 @@ class User
             // set the owning side to null (unless already changed)
             if ($event->getUserId() === $this) {
                 $event->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EventUser[]
+     */
+    public function getEventUsers(): Collection
+    {
+        return $this->eventUsers;
+    }
+
+    public function addEventUser(EventUser $eventUser): self
+    {
+        if (!$this->eventUsers->contains($eventUser)) {
+            $this->eventUsers[] = $eventUser;
+            $eventUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventUser(EventUser $eventUser): self
+    {
+        if ($this->eventUsers->contains($eventUser)) {
+            $this->eventUsers->removeElement($eventUser);
+            // set the owning side to null (unless already changed)
+            if ($eventUser->getUser() === $this) {
+                $eventUser->setUser(null);
             }
         }
 
