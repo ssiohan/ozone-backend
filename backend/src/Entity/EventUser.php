@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventUserRepository")
@@ -14,6 +15,7 @@ class EventUser
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="eventUsers")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("events_list")
      */
     private $user;
 
@@ -21,6 +23,7 @@ class EventUser
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="eventUsers")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("users_list")
      */
     private $event;
 
