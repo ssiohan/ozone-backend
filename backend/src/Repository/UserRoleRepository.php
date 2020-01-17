@@ -47,4 +47,17 @@ class UserRoleRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByUserDQL($user)
+    {
+        $query = $this->getEntityManager()->createQuery('
+            SELECT r, ur 
+            from App\Entity\UserRole ur
+            JOIN ur.role r
+            WHERE ur.user = :user
+        ')
+        ->setParameter('user',$user);
+        //dd($query);
+        return $query->getResult();
+    }
 }

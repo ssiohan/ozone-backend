@@ -2,9 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
+use App\Repository\UserRoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -15,71 +19,85 @@ class User
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("users_list")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("users_list")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups("users_list")
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups("users_list") 
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups("users_list")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("users_list")
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("users_list")
      */
     private $birthdate;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("users_list")
      */
     private $pwd_hash;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups("users_list")
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("users_list")
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups("users_list")
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("users_list")
      */
     private $status;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("users_list")
      */
     private $experience;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups("users_list")
      */
     private $credit;
 
@@ -95,6 +113,7 @@ class User
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
+     * @Groups("users_list")
      */
     private $userRoles;
 
@@ -338,6 +357,13 @@ class User
      * @return Collection|UserRole[]
      */
     public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+    /**
+     * @return Collection|UserRole[]
+     */
+    public function getUserRolesApi(): Collection
     {
         return $this->userRoles;
     }
