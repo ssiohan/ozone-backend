@@ -16,13 +16,13 @@ class Role
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("users_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups("users_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $name;
 

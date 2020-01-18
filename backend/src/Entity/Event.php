@@ -125,6 +125,7 @@ class Event
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("events_list")
      */
     private $user;
 
@@ -347,6 +348,11 @@ class Event
         $this->longitude = $longitude;
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     public function getUserId(): ?User

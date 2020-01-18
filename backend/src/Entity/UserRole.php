@@ -22,7 +22,7 @@ class UserRole
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="userRoles")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("users_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $role;
 
