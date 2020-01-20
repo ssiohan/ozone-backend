@@ -45,6 +45,7 @@ class ApiEventController extends AbstractController
         $eventJson = $request->getContent();
         $event = $serializer->deserialize($eventJson, Event::class, 'json');
 
+
         dd($event);
         $em->persist($event);
         $em->flush();
