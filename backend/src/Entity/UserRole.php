@@ -26,11 +26,6 @@ class UserRole
      */
     private $role;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;

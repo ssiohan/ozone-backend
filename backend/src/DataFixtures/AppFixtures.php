@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
         $manager->persist($role);
         $manager->flush();
 
-        //Création d'un utilisateur
+        // Création d'un utilisateur
         $user = new User();
         $user   ->setEmail('machin@machin.com')
                 ->setUsername('Machin')
@@ -44,7 +44,7 @@ class AppFixtures extends Fixture
         $manager->persist($user);
         $manager->flush();
 
-        // // Création d'un événement
+        // Création d'un événement
         $user = $manager->getRepository(User::class)->findOneBy(['username'=>'Machin']); 
         
         $event = new Event();
