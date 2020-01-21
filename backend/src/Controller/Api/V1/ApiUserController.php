@@ -22,9 +22,11 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ApiUserController extends AbstractController
 {
     /**
-     * Permet de vérifier si l'id de l'url est correct et si un user avec cet id existe en database
+     * Permet de vérifier si l'id de l'url est correct
+     * et si un user avec cet id existe en database
+     * Retourne soit un objet JsonResonse, soit un objet User
+     * @param string $id
      */
-
     public function checkUserId($id)
     {
         // On protège la route edit contre les injections,
@@ -171,6 +173,7 @@ class ApiUserController extends AbstractController
             );
         }
     }
+
     /**
      * @Route("/users/{id}", name="users_delete", methods={"DELETE"})
      */
