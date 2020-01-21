@@ -3,7 +3,6 @@
 namespace App\Controller\Api\V1;
 
 use App\Entity\Event;
-use App\Entity\User;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use App\Repository\UserRepository;
