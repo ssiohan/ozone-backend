@@ -16,121 +16,122 @@ class Event
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $type_event;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $updated_at;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $date_event;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $painfulness;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $duration;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $societal_impact;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $environmental_impact;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $user_min;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $user_max;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $bonus;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $adress;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="string")
-     * @Groups("events_list")
+     * @Groups({"users_list", "events_list"})
      */
     private $longitude;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("events_list")
+     * @Groups({"events_list"})
      */
     private $user;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
+     * @Groups("events_list")
      */
     private $eventUsers;
 

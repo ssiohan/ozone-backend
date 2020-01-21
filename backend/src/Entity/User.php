@@ -99,12 +99,15 @@ class User
     private $credit;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="user_id")
+     * // mappedBy="user_id" modifié en mappedBy="user" sinon çà buggait
+     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="user")
+     * @Groups("users_list")
      */
     private $events;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="user", orphanRemoval=true)
+     * @Groups("users_list")
      */
     private $eventUsers;
 
