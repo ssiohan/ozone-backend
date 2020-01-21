@@ -79,7 +79,7 @@ class ApiUserController extends AbstractController
 
         // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
         // Cela veut dire que checkUserId a rencontré une erreur
-        if (\is_a($user, JsonResponse::class)) {
+        if (is_a($user, JsonResponse::class)) {
             return $user;
         } else {
             // On retourne le $user en réponse HTTP JSON
@@ -136,7 +136,7 @@ class ApiUserController extends AbstractController
     {
         // On check si le user id est valide et existe en database
         $user = $this->checkUserId($id);
-        if (\is_a($user, JsonResponse::class)) {
+        if (is_a($user, JsonResponse::class)) {
             return $user;
         } else {
             // On décode les modifications fournies dans la requête JSON / HTTP "PATCH"
@@ -181,7 +181,7 @@ class ApiUserController extends AbstractController
     {
         // On check si le user id est valide et existe en database
         $user = $this->checkUserId($id);
-        if (\is_a($user, JsonResponse::class)) {
+        if (is_a($user, JsonResponse::class)) {
             return $user;
         } else {
             // Si l'user existe on le supprime de la database                        

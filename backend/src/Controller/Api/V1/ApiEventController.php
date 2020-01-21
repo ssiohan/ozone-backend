@@ -78,7 +78,7 @@ class ApiEventController extends AbstractController
 
         // Si $event est un Object JsonResponse on l'envoi en réponse HTTP JSON
         // Cela veut dire que checkEventId a rencontré une erreur
-        if (\is_a($event, JsonResponse::class)) {
+        if (is_a($event, JsonResponse::class)) {
             return $event;
         } else {
             // On retourne le $event en réponse HTTP JSON
@@ -135,7 +135,7 @@ class ApiEventController extends AbstractController
     {
         // On check si le event id est valide et existe en database
         $event = $this->checkEventId($id);
-        if (\is_a($event, JsonResponse::class)) {
+        if (is_a($event, JsonResponse::class)) {
             return $event;
         } else {
             // On décode les modifications fournies dans la requête JSON / HTTP "PATCH"
@@ -181,7 +181,7 @@ class ApiEventController extends AbstractController
     {
         // On check si le event id est valide et existe en database
         $event = $this->checkEventId($id);
-        if (\is_a($event, JsonResponse::class)) {
+        if (is_a($event, JsonResponse::class)) {
             return $event;
         } else {
             // Si l'event existe on le supprime de la database                        
