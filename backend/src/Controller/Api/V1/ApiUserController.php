@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use DateTime;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -104,29 +105,37 @@ class ApiUserController extends AbstractController
         // On récupère le contenu de la requête envoyé en POST au format JSON
         $userJson = $request->getContent();
 
-        // On déserialize pour transformer le JSON en Objet (User::class)
-        $user = $serializer->deserialize($userJson, User::class, 'json');
+        try {
+            // On déserialize pour transformer le JSON en Objet (User::class)
+            $user = $serializer->deserialize($userJson, User::class, 'json');
 
-        // On créé le nouvel utilisateur en base de données,
-        // il récupère donc un "id" auto-increment
-        $em->persist($user);
-        $em->flush();
+            // On créé le nouvel utilisateur en base de données,
+            // il récupère donc un "id" auto-increment
+            $em->persist($user);
+            $em->flush();
 
-        // On récupère l'id du ROLE_USER
-        $idRoleUser = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
+            // On récupère l'id du ROLE_USER
+            $idRoleUser = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
 
-        // On créé le UserRole à partir du $user et $idRoleUser récupérés
-        $userRole = new UserRole();
-        $userRole->setUser($user)->setRole($idRoleUser);
-        $em->persist($userRole);
-        $em->flush();
+            // On créé le UserRole à partir du $user et $idRoleUser récupérés
+            $userRole = new UserRole();
+            $userRole->setUser($user)->setRole($idRoleUser);
+            $em->persist($userRole);
+            $em->flush();
 
-        return $this->json(
-            $user,
-            201,
-            [],
-            ['groups' => 'users_list']
-        );
+            return $this->json(
+                $user,
+                201,
+                [],
+                ['groups' => 'users_list']
+            );
+        } catch (UniqueConstraintViolationException $uniqueException) {
+            return $this->json([
+                'status' => 400,
+                'alert' => 'This email or username already exist in database !',
+                'error_message' => $uniqueException->getMessage()
+            ], 400);
+        }
     }
 
     /**
@@ -139,38 +148,46 @@ class ApiUserController extends AbstractController
         if (is_a($user, JsonResponse::class)) {
             return $user;
         } else {
-            // On décode les modifications fournies dans la requête JSON / HTTP "PATCH"
-            // On obtient donc un array avec la même structure que le JSON.
-            $userJson = json_decode($request->getContent(), true);
+            try {
+                // On décode les modifications fournies dans la requête JSON / HTTP "PATCH"
+                // On obtient donc un array avec la même structure que le JSON.
+                $userJson = json_decode($request->getContent(), true);
 
-            // On verifie si la clef birthdate a été fournie dans la requête
-            // Si oui on convertit la date au format DateTime à partir de ('Y-m-d')
-            // On refresh la date anniversaire fournie ou sinon on remet la date qui existait déjà.
-            if (array_key_exists('birthdate', $userJson)) {
-                $user->setBirthdate(new DateTime($userJson['birthdate']));
+                // On verifie si la clef birthdate a été fournie dans la requête
+                // Si oui on convertit la date au format DateTime à partir de ('Y-m-d')
+                // On refresh la date anniversaire fournie ou sinon on remet la date qui existait déjà.
+                if (array_key_exists('birthdate', $userJson)) {
+                    $user->setBirthdate(new DateTime($userJson['birthdate']));
+                }
+
+                // On passe par le form Symfony UserType,
+                // car il prend un array en entrée pour le convertir en objet User::class
+                $form = $this->createForm(UserType::class, $user);
+
+                // En précisant false en second paramètre de la méthode submit(),
+                // on demande à ne modifier que les éléments fournis dans la requete HTTP
+                $form->submit($userJson, false);
+
+                // On met à jour la date de modification de l'user
+                $user->setUpdatedAt(new DateTime());
+
+                // On met à jour l'user en database
+                $em->persist($user);
+                $em->flush();
+
+                return $this->json(
+                    $user,
+                    201,
+                    [],
+                    ['groups' => 'users_list']
+                );
+            } catch (UniqueConstraintViolationException $uniqueException) {
+                return $this->json([
+                    'status' => 400,
+                    'alert' => 'This email or username already exist in database !',
+                    'error_message' => $uniqueException->getMessage()
+                ], 400);
             }
-
-            // On passe par le form Symfony UserType,
-            // car il prend un array en entrée pour le convertir en objet User::class
-            $form = $this->createForm(UserType::class, $user);
-
-            // En précisant false en second paramètre de la méthode submit(),
-            // on demande à ne modifier que les éléments fournis dans la requete HTTP
-            $form->submit($userJson, false);
-
-            // On met à jour la date de modification de l'user
-            $user->setUpdatedAt(new DateTime());
-
-            //On met à jour l'user en database                        
-            $em->persist($user);
-            $em->flush();
-            
-            return $this->json(
-                $user,
-                201,
-                [],
-                ['groups' => 'users_list']
-            );
         }
     }
 
