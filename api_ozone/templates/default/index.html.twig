@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}{% endblock %}
+{% block body %}
+	<style>
+		.example-wrapper {
+			margin: 1em auto;
+			max-width: 800px;
+			width: 95%;
+			font: 18px / 1.5 sans-serif;
+		}
+		.example-wrapper code {
+			background: #F5F5F5;
+			padding: 2px 6px;
+		}
+	</style>
+	<div class="example-wrapper text-center">
+		<h1>
+			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            Connecté en tant que {{ app.user.username }}
+				<a href="{{ path('app_logout') }}" class="btn btn-success">LOGOUT</a>
+			{% else %}
+				Pour accéder à l'API :<br>
+				<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
+				<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
+			{% endif %}
+		</h1><hr>
+		<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
+		<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+	</div>
+{% endblock %}

@@ -32,6 +32,6 @@ class SecurityController extends AbstractController
      */
     public function logout()
     {
-        return new RedirectResponse($this->urlGenerator->generate('api_v1_'));
+        return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
 }
