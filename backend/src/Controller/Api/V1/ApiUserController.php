@@ -171,7 +171,7 @@ class ApiUserController extends AbstractController
                 // On met à jour la date de modification de l'user
                 $user->setUpdatedAt(new DateTime());
 
-                // On met à jour l'user en database
+                // On met à jour l'user en databasefb34f88
                 $em->persist($user);
                 $em->flush();
 

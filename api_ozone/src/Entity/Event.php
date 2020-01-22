@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -16,129 +15,107 @@ class Event
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"users_list", "events_list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"users_list", "events_list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"users_list", "events_list"})
      */
-    private $type_event;
+    private $typeEvent;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"users_list", "events_list"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"users_list", "events_list"})
      */
-    private $created_at;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
      */
-    private $updated_at;
+    private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"users_list", "events_list"})
      */
-    private $date_event;
+    private $dateEvent;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"users_list", "events_list"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
     private $painfulness;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
     private $duration;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
-    private $societal_impact;
+    private $impactSocietal;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
-    private $environmental_impact;
+    private $impactEnvironmental;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
-    private $user_min;
+    private $userMin;
 
     /**
      * @ORM\Column(type="smallint")
-     * @Groups({"users_list", "events_list"})
      */
-    private $user_max;
+    private $userMax;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"users_list", "events_list"})
      */
     private $bonus;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Groups({"users_list", "events_list"})
+     * @ORM\Column(type="string", length=150, nullable=true)
      */
     private $adress;
 
     /**
-     * @ORM\Column(type="string")
-     * @Groups({"users_list", "events_list"})
+     * @ORM\Column(type="string", length=20)
      */
     private $latitude;
 
     /**
-     * @ORM\Column(type="string")
-     * @Groups({"users_list", "events_list"})
+     * @ORM\Column(type="string", length=20)
      */
     private $longitude;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="events")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdEvents")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({fb34f88"events_list"})
      */
-    private $user;
+    private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
-     * @Groups("events_list")
      */
     private $eventUsers;
 
     public function __construct()
     {
-        $this->created_at = new \DateTime;
-        $this->status = "Planifié";
         $this->eventUsers = new ArrayCollection();
     }
 
@@ -161,12 +138,12 @@ class Event
 
     public function getTypeEvent(): ?string
     {
-        return $this->type_event;
+        return $this->typeEvent;
     }
 
-    public function setTypeEvent(string $type_event): self
+    public function setTypeEvent(string $typeEvent): self
     {
-        $this->type_event = $type_event;
+        $this->typeEvent = $typeEvent;
 
         return $this;
     }
@@ -185,36 +162,36 @@ class Event
 
     public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
     public function getDateEvent(): ?\DateTimeInterface
     {
-        return $this->date_event;
+        return $this->dateEvent;
     }
 
-    public function setDateEvent(\DateTimeInterface $date_event): self
+    public function setDateEvent(\DateTimeInterface $dateEvent): self
     {
-        $this->date_event = $date_event;
+        $this->dateEvent = $dateEvent;
 
         return $this;
     }
@@ -255,50 +232,50 @@ class Event
         return $this;
     }
 
-    public function getSocietalImpact(): ?int
+    public function getImpactSocietal(): ?int
     {
-        return $this->societal_impact;
+        return $this->impactSocietal;
     }
 
-    public function setSocietalImpact(int $societal_impact): self
+    public function setImpactSocietal(int $impactSocietal): self
     {
-        $this->societal_impact = $societal_impact;
+        $this->impactSocietal = $impactSocietal;
 
         return $this;
     }
 
-    public function getEnvironmentalImpact(): ?int
+    public function getImpactEnvironmental(): ?int
     {
-        return $this->environmental_impact;
+        return $this->impactEnvironmental;
     }
 
-    public function setEnvironmentalImpact(int $environmental_impact): self
+    public function setImpactEnvironmental(int $impactEnvironmental): self
     {
-        $this->environmental_impact = $environmental_impact;
+        $this->impactEnvironmental = $impactEnvironmental;
 
         return $this;
     }
 
     public function getUserMin(): ?int
     {
-        return $this->user_min;
+        return $this->userMin;
     }
 
-    public function setUserMin(int $user_min): self
+    public function setUserMin(int $userMin): self
     {
-        $this->user_min = $user_min;
+        $this->userMin = $userMin;
 
         return $this;
     }
 
     public function getUserMax(): ?int
     {
-        return $this->user_max;
+        return $this->userMax;
     }
 
-    public function setUserMax(int $user_max): self
+    public function setUserMax(int $userMax): self
     {
-        $this->user_max = $user_max;
+        $this->userMax = $userMax;
 
         return $this;
     }
@@ -351,19 +328,14 @@ class Event
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getAuthor(): ?User
     {
-        return $this->user;
+        return $this->author;
     }
 
-    public function getUserId(): ?User
+    public function setAuthor(?User $author): self
     {
-        return $this->user;
-    }
-
-    public function setUserId(?User $user): self
-    {
-        $this->user = $user;
+        $this->author = $author;
 
         return $this;
     }
@@ -398,4 +370,5 @@ class Event
 
         return $this;
     }
+
 }
