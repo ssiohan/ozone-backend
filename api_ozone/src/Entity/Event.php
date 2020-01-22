@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -15,102 +16,122 @@ class Event
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"users_list", "events_list"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"users_list", "events_list"})
      */
     private $typeEvent;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"users_list", "events_list"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
      */
     private $dateEvent;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"users_list", "events_list"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $painfulness;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $duration;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $impactSocietal;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $impactEnvironmental;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $userMin;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users_list", "events_list"})
      */
     private $userMax;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $bonus;
 
     /**
      * @ORM\Column(type="string", length=150, nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $adress;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"users_list", "events_list"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"users_list", "events_list"})
      */
     private $longitude;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdEvents")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"events_list"})
      */
     private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
+     * @Groups({"events_list"})
      */
     private $eventUsers;
 

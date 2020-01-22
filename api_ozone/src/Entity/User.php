@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Event;
+use App\Entity\EventUser;
+use App\Entity\UserRole;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -16,11 +20,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $email;
 
@@ -37,76 +43,91 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $birthdate;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $avatar;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"users_list", "events_list"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list"})
      */
     private $experience;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list"})
      */
     private $credit;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="author")
+     * @Groups({"users_list"})
      */
     private $createdEvents;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
-     */
-    private $userRoles;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="user", orphanRemoval=true)
+     * @Groups({"users_list"})
      */
     private $userEvents;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $userRoles;
+
     public function __construct()
     {
+        // Récupère tous les événements créés par l'utilisateur
         $this->createdEvents = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
         $this->userEvents = new ArrayCollection();

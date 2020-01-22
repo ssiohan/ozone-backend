@@ -125,13 +125,13 @@ class User
     {
         // Récupère tous les événements créés par l'utilisateur
         $this->events = new ArrayCollection();
+        $this->eventUsers = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
 
         $this->created_at = new \DateTime;
         $this->status = true;
         $this->experience = 0;
         $this->credit = 0;
-        $this->eventUsers = new ArrayCollection();
-        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): ?int

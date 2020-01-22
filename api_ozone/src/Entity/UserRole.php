@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRoleRepository")
@@ -21,6 +22,7 @@ class UserRole
      * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\Role", inversedBy="roleUsers")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"users_list", "events_list"})
      */
     private $role;
 
