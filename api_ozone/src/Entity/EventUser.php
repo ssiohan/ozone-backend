@@ -9,20 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventUser
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
 
     /**
+     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="eventUsers")
      * @ORM\JoinColumn(nullable=false)
      */
     private $event;
 
     /**
+     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userEvents")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -32,11 +28,6 @@ class EventUser
      * @ORM\Column(type="boolean")
      */
     private $attendance;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getEvent(): ?Event
     {

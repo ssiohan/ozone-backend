@@ -110,6 +110,11 @@ class User implements UserInterface
         $this->createdEvents = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
         $this->userEvents = new ArrayCollection();
+
+        $this->createdAt = new \DateTime;
+        $this->status = true;
+        $this->experience = 0;
+        $this->credit = 0;
     }
 
     public function getId(): ?int

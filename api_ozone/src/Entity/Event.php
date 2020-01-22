@@ -117,6 +117,9 @@ class Event
     public function __construct()
     {
         $this->eventUsers = new ArrayCollection();
+
+        $this->createdAt = new \DateTime;
+        $this->status = "Planifié";
     }
 
     public function getId(): ?int
