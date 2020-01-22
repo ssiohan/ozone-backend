@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -22,6 +23,13 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ApiUserController extends AbstractController
 {
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     /**
      * Permet de vérifier si l'id de l'url est correct
      * et si un user avec cet id existe en database
@@ -109,6 +117,12 @@ class ApiUserController extends AbstractController
             // On déserialize pour transformer le JSON en Objet (User::class)
             $user = $serializer->deserialize($userJson, User::class, 'json');
 
+            // On hash le password du user reçu en JSON (avant l'écriture en database)
+            $user->setPassword($this->passwordEncoder->encodePassword(
+                $user,
+                $user->getPassword()
+            ));
+
             // On créé le nouvel utilisateur en base de données,
             // il récupère donc un "id" auto-increment
             $em->persist($user);
@@ -171,10 +185,17 @@ class ApiUserController extends AbstractController
                 // On met à jour la date de modification de l'user
                 $user->setUpdatedAt(new DateTime());
 
-                // On met à jour l'user en databasefb34f88
+                // On hash le password du user si reçu en JSON (avant l'écriture en database)
+                if (array_key_exists('password', $userJson)) {
+                    $user->setPassword($this->passwordEncoder->encodePassword(
+                        $user,
+                        $user->getPassword()
+                    ));
+                }
+
+                // On met à jour l'user en database
                 $em->persist($user);
                 $em->flush();
-
                 return $this->json(
                     $user,
                     201,
