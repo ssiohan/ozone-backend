@@ -107,13 +107,13 @@ class ApiEventController extends AbstractController
         $eventArray = json_decode($eventJson, true);
 
         // On récupère l'user dont l'id a été fourni dans la requête HTTP JSON
-        $user = $userRepository->find($eventArray['user']);
+        $user = $userRepository->find($eventArray['author']);
 
         // On déserialize pour transformer le JSON en Objet (Event::class)
         $event = $serializer->deserialize($eventJson, Event::class, 'json');
 
         // On définit l'user récupéré comme créateur de l'event
-        $event->setUserId($user);
+        $event->setAuthor($user);
 
         // On créé le nouvel événement en base de données,
         // il récupère donc un "id" auto-increment

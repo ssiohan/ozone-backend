@@ -48,6 +48,7 @@ class AppUserAuthenticator extends AbstractFormLoginAuthenticator implements Pas
         $credentials = [
             'email' => $request->request->get('email'),
             'password' => $request->request->get('password'),
+            // On desactive le csrf_token pour pouvoir se logger via API
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
@@ -60,6 +61,9 @@ class AppUserAuthenticator extends AbstractFormLoginAuthenticator implements Pas
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
+        // On desactive le csrf_token pour pouvoir se logger via API
+        /*
+        */
         $token = new CsrfToken('authenticate', $credentials['csrf_token']);
         if (!$this->csrfTokenManager->isTokenValid($token)) {
             throw new InvalidCsrfTokenException();

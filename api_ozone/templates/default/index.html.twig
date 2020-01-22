@@ -16,15 +16,19 @@
 	<div class="example-wrapper text-center">
 		<h1>
 			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            Connecté en tant que {{ app.user.username }}
-				<a href="{{ path('app_logout') }}" class="btn btn-success">LOGOUT</a>
+				Connecté en tant que
+				{{ app.user.pseudo }}<br>
+				<a href="{{ path('app_logout') }}" class="btn btn-success">LOGOUT</a><hr>
+        </h1>
+				<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
+				<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
 			{% else %}
-				Pour accéder à l'API :<br>
+				Pour accéder à l'API<br>
+                Veuillez vous connecter !<br>
 				<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
 				<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
+        </h1>
 			{% endif %}
-		</h1><hr>
-		<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
-		<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+		<br>
 	</div>
 {% endblock %}
