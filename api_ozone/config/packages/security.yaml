@@ -14,6 +14,23 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        login:
+            pattern:  ^/api/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
         main:
             anonymous: lazy
             guard:
@@ -37,8 +54,10 @@ security:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: '^/register', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        # Remettre ROLE_ADMIN pour l'api une fois les tests API terminés et le JWT en place.
-        - { path: '^/api', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        
+        # Limitations sur les routes API
+        - { path: '^/api/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/api', roles: IS_AUTHENTICATED_FULLY }
         
     role_hierarchy:
         ROLE_ADMIN:         [ROLE_PARTNER]

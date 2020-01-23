@@ -70,7 +70,7 @@ class ApiEventController extends AbstractController
     /**
      * @Route("/events/{id}", name="event_show", methods={"GET"})
      */
-    public function show(EventRepository $eventRepository, $id)
+    public function show($id)
     {
         // On check si le event id est valide et existe en database
         // S'il existe checkEventId() retourne le $event au format Object
