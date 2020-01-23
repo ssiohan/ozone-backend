@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +63,8 @@ class ApiUserController extends AbstractController
             }
         }
     }
+
+    // TODO: public function isUserOrAdmin()
 
     /**
      * @Route("/users", name="users_list", methods={"GET"})
@@ -154,6 +157,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_edit", methods={"PATCH"})
+     * @isGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, EntityManagerInterface $em, $id)
     {
@@ -214,6 +218,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_delete", methods={"DELETE"})
+     * @isGranted("ROLE_ADMIN")
      */
     public function delete(EntityManagerInterface $em, $id)
     {

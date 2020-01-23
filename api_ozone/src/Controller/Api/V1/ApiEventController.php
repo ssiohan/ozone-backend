@@ -8,6 +8,7 @@ use App\Repository\EventRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +54,8 @@ class ApiEventController extends AbstractController
         }
     }
 
+    // TODO: public function isAuthorOrAdmin()
+
     /**
      * @Route("/events", name="events_list", methods={"GET"})
      */
@@ -93,6 +96,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events", name="event_new", methods={"POST"})
+     * @isGranted("ROLE_USER")
      */
     public function new(
         Request $request,
@@ -130,6 +134,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events/{id}", name="events_edit", methods={"PATCH"})
+     * @isGranted("ROLE_USER")
      */
     public function edit(Request $request, EntityManagerInterface $em, $id)
     {
