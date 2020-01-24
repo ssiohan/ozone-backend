@@ -1,0 +1,5 @@
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%' # For the token creation
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%' # For the token verification
+    pass_phrase: '%env(JWT_PASSPHRASE)%' # For the token creation, usage of an environment variable is recommended
+    token_ttl: 3600
