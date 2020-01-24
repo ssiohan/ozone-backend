@@ -45,7 +45,7 @@ class ApiUserController extends AbstractController
             return new JsonResponse(
                 ['error' => "User ID '{$id}' not valid !"],
                 Response::HTTP_BAD_REQUEST
-            );
+            ); 
         } else {
             // On récupère l'utilisateur en base de données
             $entityManager = $this->getDoctrine()->getManager();
@@ -65,6 +65,23 @@ class ApiUserController extends AbstractController
     }
 
     // TODO: public function isUserOrAdmin()
+    /**
+     * @Route("/verif/{id}", name="users_access", methods={"GET"})
+     */
+    public function isUserOrAdmin($id, RoleRepository $roleRepository)
+    {
+        $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+        //on va chercher l'instance de l'utilisateur avec l'affectation du ROLE_ADMIN
+        $entityManager = $this->getDoctrine()->getManager();
+        $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
+            'user' => $id,
+            'role' => $idRoleAdmin
+        ]);
+        //si la recherche ne trouve rien, elle retourne null
+        if($isAdmin!=null){ $isAdmin=TRUE; }else{ $isAdmin=FALSE; }
+
+        return new JsonResponse(['isAdmin' => $isAdmin]);
+    }
 
     /**
      * @Route("/users", name="users_list", methods={"GET"})

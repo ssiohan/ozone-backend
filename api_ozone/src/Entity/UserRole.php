@@ -49,5 +49,6 @@ class UserRole
 
         return $this;
     }
+
     
 }

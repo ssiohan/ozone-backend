@@ -3,8 +3,10 @@
 namespace App\Controller\Api\V1;
 
 use App\Entity\Event;
+use App\Entity\UserRole;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,7 +57,35 @@ class ApiEventController extends AbstractController
     }
 
     // TODO: public function isAuthorOrAdmin()
+     /**
+     * @Route("/event/{id_event}/authoradmin/{id_user}", name="event_author_admin", methods={"GET"})
+     */
+    public function isAuthorOrAdmin($id_event, $id_user, RoleRepository $roleRepository)
+    {
+        $event = $this->checkEventId($id_event);
+        $author_id = $event->getAuthor()->getid();
 
+        // Si l'utilisateur est l'auteur de l'événement
+        if($author_id == $id_user)
+        {
+            return new JsonResponse(['author' => TRUE]);
+        }
+        $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+        //on va chercher si l'utilisateur est un ROLE_ADMIN
+        $entityManager = $this->getDoctrine()->getManager();
+        $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
+            'user' => $id_user,
+            'role' => $idRoleAdmin
+        ]);
+        //si l'utilisateur est un ROLE_ADMIN
+        if($isAdmin != null)
+        {
+            return new JsonResponse(['author' => FALSE, 'admin' => TRUE]);
+        }else{
+            return new JsonResponse(['author' => FALSE, 'admin' => FALSE]);
+        }
+    }
+    
     /**
      * @Route("/events", name="events_list", methods={"GET"})
      */
