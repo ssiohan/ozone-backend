@@ -290,7 +290,7 @@ class User implements UserInterface
 
     public function setAvatar(?string $avatar): self
     {
-        $this->avatar = $avatar;
+        $this->avatar = '/asserts/avatars/'.$avatar;
 
         return $this;
     }
