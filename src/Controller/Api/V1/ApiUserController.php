@@ -85,6 +85,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users", name="users_list", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function list(UserRepository $userRepository)
     {
@@ -99,6 +100,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_show", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function show($id)
     {

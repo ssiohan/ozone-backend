@@ -99,6 +99,21 @@ class ApiEventController extends AbstractController
             ['groups' => 'events_list']
         );
     }
+    
+    /**
+     * @Route("/events/admin", name="events_list_admin", methods={"GET"})
+     * @isGranted("ROLE_ADMIN")
+     */
+    public function listAdmin(EventRepository $eventRepository)
+    {
+        $events = $eventRepository->findAll();
+        return $this->json(
+            $events,
+            200,
+            [],
+            ['groups' => 'events_list_admin']
+        );
+    }
 
     /**
      * @Route("/events/{id}", name="event_show", methods={"GET"})
@@ -120,6 +135,31 @@ class ApiEventController extends AbstractController
                 201,
                 [],
                 ['groups' => 'events_list']
+            );
+        }
+    }
+
+    /**
+     * @Route("/events/{id}/admin", name="event_show_admin", methods={"GET"})
+     * @isGranted("ROLE_ADMIN")
+     */
+    public function showAdmin($id)
+    {
+        // On check si le event id est valide et existe en database
+        // S'il existe checkEventId() retourne le $event au format Object
+        $event = $this->checkEventId($id);
+
+        // Si $event est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkEventId a rencontré une erreur
+        if (is_a($event, JsonResponse::class)) {
+            return $event;
+        } else {
+            // On retourne le $event en réponse HTTP JSON
+            return $this->json(
+                $event,
+                201,
+                [],
+                ['groups' => 'events_list_admin']
             );
         }
     }

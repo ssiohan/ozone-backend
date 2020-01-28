@@ -28,7 +28,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $email;
 
@@ -69,7 +69,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $birthdate;
 
@@ -105,7 +105,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $credit;
 
@@ -123,7 +123,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $userRoles;
 
