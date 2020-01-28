@@ -26,6 +26,11 @@ class UserRole
      */
     private $role;
 
+    public function __toString()
+    {
+        return (string) $this->getUser() . ' => ' . $this->getRole();
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -49,6 +54,4 @@ class UserRole
 
         return $this;
     }
-
-    
 }

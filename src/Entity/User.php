@@ -140,6 +140,11 @@ class User implements UserInterface
         $this->credit = 0;
     }
 
+    public function __toString()
+    {
+        return (string) $this->getEmail();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

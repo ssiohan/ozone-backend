@@ -14,21 +14,25 @@
 		}
 	</style>
 	<div class="example-wrapper text-center">
-		<h1>
-			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-				Connecté en tant que
-				{{ app.user.pseudo }}<br>
-				<a href="{{ path('app_logout') }}" class="btn btn-success">LOGOUT</a><hr>
-        </h1>
-				<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
-				<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
-			{% else %}
-				Pour accéder à l'API<br>
-                Veuillez vous connecter !<br>
-				<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
-				<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
-        </h1>
-			{% endif %}
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			<h2 class="alert alert-success p-3">
+				<strong>Bienvenue sur l'API d'oZone mon cher
+					<div class="badge badge-success">{{ app.user.pseudo }}</strong>
+				</div>
+				!
+			</h2><br>
+			<a href="{{ path('easyadmin') }}" class="btn btn-primary">ADMIN</a>
+			<a href="{{ path('app_logout') }}" class="btn btn-danger">LOGOUT</a><hr>
+			<br>
+			<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
+			<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+		{% else %}
+			<h2 class="alert alert-danger p-3">
+				<strong>Pour accéder à l'API, veuillez vous connecter !</strong>
+			</h2><br>
+			<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
+			<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
+		{% endif %}
 		<br>
 	</div>
 {% endblock %}

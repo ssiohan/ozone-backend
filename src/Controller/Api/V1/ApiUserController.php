@@ -45,7 +45,7 @@ class ApiUserController extends AbstractController
             return new JsonResponse(
                 ['error' => "User ID '{$id}' not valid !"],
                 Response::HTTP_BAD_REQUEST
-            ); 
+            );
         } else {
             // On récupère l'utilisateur en base de données
             $entityManager = $this->getDoctrine()->getManager();
@@ -78,7 +78,11 @@ class ApiUserController extends AbstractController
             'role' => $idRoleAdmin
         ]);
         //si la recherche ne trouve rien, elle retourne null
-        if($isAdmin!=null){ $isAdmin=TRUE; }else{ $isAdmin=FALSE; }
+        if ($isAdmin != null) {
+            $isAdmin = TRUE;
+        } else {
+            $isAdmin = FALSE;
+        }
 
         return new JsonResponse(['isAdmin' => $isAdmin]);
     }

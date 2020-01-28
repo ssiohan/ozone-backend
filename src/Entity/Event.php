@@ -143,6 +143,11 @@ class Event
         $this->status = "Planifié";
     }
 
+    public function __toString()
+    {
+        return (string) $this->getTitle();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -395,5 +400,4 @@ class Event
 
         return $this;
     }
-
 }
