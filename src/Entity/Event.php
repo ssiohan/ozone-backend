@@ -213,6 +213,7 @@ class Event
         return $this->dateEvent;
     }
 
+
     public function setDateEvent(\DateTimeInterface $dateEvent): self
     {
         $this->dateEvent = $dateEvent;

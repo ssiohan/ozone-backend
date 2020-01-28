@@ -211,6 +211,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events/{id}", name="events_delete", methods={"DELETE"})
+     * @isGranted("ROLE_USER")
      */
     public function delete(EntityManagerInterface $em, $id)
     {

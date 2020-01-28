@@ -174,7 +174,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_edit", methods={"PATCH"})
-     * @isGranted("ROLE_ADMIN")
+     * @isGranted("ROLE_USER")
      */
     public function edit(Request $request, EntityManagerInterface $em, $id)
     {
@@ -235,7 +235,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_delete", methods={"DELETE"})
-     * @isGranted("ROLE_ADMIN")
+     * @isGranted("ROLE_USER")
      */
     public function delete(EntityManagerInterface $em, $id)
     {
