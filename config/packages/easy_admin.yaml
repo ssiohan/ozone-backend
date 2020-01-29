@@ -1,5 +1,5 @@
 easy_admin:
-  site_name: '<img src="/bundles/easyadmin/images/logo_sans_fond.png" width="10%"/> oZone Admin Page'
+  site_name: '<img src="/public/bundles/easyadmin/images/logo_sans_fond.png" width="10%"/> oZone Admin Page'
   entities:
     # List the entity class name you want to manage
     Evenements:
