@@ -43,7 +43,7 @@ class ApiUserController extends AbstractController
         // en testant que $id est bien de type numeric
         if (!is_numeric($id)) {
             return new JsonResponse(
-                ['error' => "User ID '{$id}' not valid !"],
+                ['error' => "ID({$id}) format invalide !"],
                 Response::HTTP_BAD_REQUEST
             );
         } else {
@@ -54,7 +54,7 @@ class ApiUserController extends AbstractController
             // on retourne une erreur 400 en JSON
             if (empty($user)) {
                 return new JsonResponse(
-                    ['error' => "User with ID '{$id}' not found !"],
+                    ['error' => "ID({$id}) n'existe pas !"],
                     Response::HTTP_BAD_REQUEST
                 );
             } else {
@@ -64,52 +64,76 @@ class ApiUserController extends AbstractController
         }
     }
 
-    // TODO: public function isUserOrAdmin()
     /**
-     * @Route("/verif/{id}", name="users_access", methods={"GET"})
+     * @Route("/is_admin/{id}", name="user_is_admin", methods={"GET"})
      */
-    public function isUserOrAdmin($id, RoleRepository $roleRepository)
+    public function isAdmin($id, RoleRepository $roleRepository)
     {
-        $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
-        //on va chercher l'instance de l'utilisateur avec l'affectation du ROLE_ADMIN
-        $entityManager = $this->getDoctrine()->getManager();
-        $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
-            'user' => $id,
-            'role' => $idRoleAdmin
-        ]);
-        //si la recherche ne trouve rien, elle retourne null
-        if ($isAdmin != null) {
-            $isAdmin = TRUE;
-        } else {
-            $isAdmin = FALSE;
-        }
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
 
-        return new JsonResponse(['isAdmin' => $isAdmin]);
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
+        } else {
+            $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+            // On va chercher l'instance de l'utilisateur avec l'affectation du ROLE_ADMIN
+            $entityManager = $this->getDoctrine()->getManager();
+            $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
+                'user' => $id,
+                'role' => $idRoleAdmin
+            ]);
+            // Si la recherche ne trouve rien, elle retourne null
+            if ($isAdmin != null) {
+                $isAdmin = TRUE;
+            } else {
+                $isAdmin = FALSE;
+            }
+
+            return new JsonResponse(['isAdmin' => $isAdmin]);
+        }
     }
 
     /**
-     *  @Route("/user_role/{id}/{role}", name="user_role", methods={"GET"})
+     * @Route("/has_role/{id}/{role}", name="user_has_role", methods={"GET"})
      */
     public function userHasRole($id, $role, RoleRepository $roleRepository)
     {
-        // récupère l'id du role spécifié
-        $idRole = $roleRepository->findOneBy(['name' => "$role"]);
-        $em = $this->getDoctrine()->getManager();
-        // on cherche une instance du role et de l'utilisateur dans l'entité UserRole
-        $isRole = $em->getRepository(UserRole::class)->findOneBy([
-            'user' => $id,
-            'role' => $idRole
-        ]);
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
 
-         //si la recherche ne trouve rien, elle retourne null
-         if ($isRole != null) {
-            $isRole = TRUE;
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
         } else {
-            $isRole = FALSE;
+            // récupère l'id du role spécifié
+            $idRole = $roleRepository->findOneBy(['name' => "$role"]);
+            $em = $this->getDoctrine()->getManager();
+
+            // on cherche une instance du role et de l'utilisateur dans l'entité UserRole
+            $isRole = $em->getRepository(UserRole::class)->findOneBy([
+                'user' => $id,
+                'role' => $idRole
+            ]);
+
+            //si la recherche ne trouve rien, elle retourne null
+            if ($isRole != null) {
+                $isRole = TRUE;
+            } else {
+                $isRole = FALSE;
+            }
+
+            return new JsonResponse([
+                "is" => (bool) $isRole,
+                "role" => (string) $role
+            ]);
         }
-
-        return new JsonResponse(["isRole" => $isRole]);
-
     }
 
     /**
