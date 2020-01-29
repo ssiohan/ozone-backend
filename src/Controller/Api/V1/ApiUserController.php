@@ -88,6 +88,31 @@ class ApiUserController extends AbstractController
     }
 
     /**
+     *  @Route("/user_role/{id}/{role}", name="user_role", methods={"GET"})
+     */
+    public function userHasRole($id, $role, RoleRepository $roleRepository)
+    {
+        // récupère l'id du role spécifié
+        $idRole = $roleRepository->findOneBy(['name' => "$role"]);
+        $em = $this->getDoctrine()->getManager();
+        // on cherche une instance du role et de l'utilisateur dans l'entité UserRole
+        $isRole = $em->getRepository(UserRole::class)->findOneBy([
+            'user' => $id,
+            'role' => $idRole
+        ]);
+
+         //si la recherche ne trouve rien, elle retourne null
+         if ($isRole != null) {
+            $isRole = TRUE;
+        } else {
+            $isRole = FALSE;
+        }
+
+        return new JsonResponse(["isRole" => $isRole]);
+
+    }
+
+    /**
      * @Route("/users", name="users_list", methods={"GET"})
      * @isGranted("ROLE_USER")
      */
