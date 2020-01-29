@@ -27,6 +27,12 @@ class Role
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=30)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $label;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="role", orphanRemoval=true)
      */
     private $roleUsers;
@@ -54,6 +60,18 @@ class Role
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): self
+    {
+        $this->label = $label;
 
         return $this;
     }

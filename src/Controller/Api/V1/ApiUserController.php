@@ -130,7 +130,7 @@ class ApiUserController extends AbstractController
             }
 
             return new JsonResponse([
-                "is" => (bool) $isRole,
+                "has" => (bool) $isRole,
                 "role" => (string) $role
             ]);
         }

@@ -111,6 +111,12 @@ class Event
     private $adress;
 
     /**
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $city;
+
+    /**
      * @ORM\Column(type="string", length=20)
      * @Groups({"users_list", "events_list"})
      */
@@ -330,6 +336,18 @@ class Event
     public function setAdress(?string $adress): self
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
