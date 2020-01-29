@@ -4,18 +4,18 @@ easy_admin:
     # List the entity class name you want to manage
     Evenements:
       class: App\Entity\Event
-      list: ['show']
+      list: ["show"]
     Roles:
       class: App\Entity\Role
-      list: ['show']
+      list: ["show"]
     Utilisateurs:
       class: App\Entity\User
-      list: ['show']
+      list: ["show"]
   user:
-        # this method/property must return the string representation of the user
-        # (Symfony will look for getFullName(), isFullName(), ..., and 'fullName' property)
-        # name_property_path: 'fullName'
+    # this method/property must return the string representation of the user
+    # (Symfony will look for getFullName(), isFullName(), ..., and 'fullName' property)
+    # name_property_path: 'fullName'
 
-        # this method/property must return the absolute URL of the user avatar image
-        # (Symfony will look for getGravatar(), isGravatar(), ..., and 'gravatar' property)
-        avatar_property_path: 'avatar'
+    # this method/property must return the absolute URL of the user avatar image
+    # (Symfony will look for getGravatar(), isGravatar(), ..., and 'gravatar' property)
+    avatar_property_path: "avatar"
