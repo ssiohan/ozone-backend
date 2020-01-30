@@ -139,13 +139,8 @@ class Event
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
-     * @Groups({"events_list"})
-     */
-    private $eventUsers;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"events_list"})
      */
     private $image;
 
@@ -154,6 +149,12 @@ class Event
      * @var File|null
      */
     private $imageFile;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
+     * @Groups({"events_list"})
+     */
+    private $eventUsers;
 
     public function __construct()
     {

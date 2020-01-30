@@ -78,18 +78,6 @@ class User implements UserInterface
     private $birthdate;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $avatar;
-
-    /**
-     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
-     * @var File|null
-     */
-    private $avatarFile;
-
-    /**
      * @ORM\Column(type="datetime")
      * @Groups({"users_list", "events_list"})
      */
@@ -118,6 +106,18 @@ class User implements UserInterface
      * @Groups({"users_list", "events_list_admin"})
      */
     private $credit;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $avatar;
+
+    /**
+     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
+     * @var File|null
+     */
+    private $avatarFile;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="author")
