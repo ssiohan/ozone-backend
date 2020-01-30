@@ -21,18 +21,422 @@
 				</div>
 				!
 			</h2><br>
-			<a href="{{ path('easyadmin') }}" class="btn btn-primary">ADMIN</a>
-			<a href="{{ path('app_logout') }}" class="btn btn-danger">LOGOUT</a><hr>
-			<br>
-			<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
-			<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+			<a href="{{ path('easyadmin') }}" class="btn btn-primary"><strong>ADMIN</strong></a>
+			<a href="{{ path('app_logout') }}" class="btn btn-danger"><strong>LOGOUT</strong></a>
 		{% else %}
 			<h2 class="alert alert-danger p-3">
 				<strong>Pour accéder à l'API, veuillez vous connecter !</strong>
 			</h2><br>
-			<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
-			<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
+			<a href="{{ path('app_register') }}" class="btn btn-success"><strong>REGISTER</strong></a>
+			<a href="{{ path('app_login') }}" class="btn btn-success"><strong>LOGIN</strong></a>
 		{% endif %}
 		<br>
+	</div><br>
+	<h1 class="text-center bg-dark text-light mt-3 mb-3 p-3">Routes ApiUserController</h1>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col" class="text-center">Titre</th>
+			<th scope="col">Route</th>
+			<th scope="col">détails</th>
+			<th scope="col">Variables</th>
+			<th scope="col">Méthode</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				checkUserId
+			</th>
+			<td>
+				Pas de route car cette fonction n'est utilisée que dans le controller
+			</td>
+			<td>
+				vérifie si un id existe bien en base.<br/> s'il existe, retourne l'utilisateur en réponse
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				NA
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				isAdmin
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users/{id}/is_admin<br/> 
+				Exemple : <a href="{{ path('api_v1_user_is_admin', { 'id': 9 }) }}">{{ path('api_v1_user_is_admin', { 'id': 9 }) }}</a>
+			</td>
+			<td>
+				vérifie l'affectation de ROLE_ADMIN au USER saisi. 
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				userHasRole
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users/{id}/has_role/{role}</br>
+				Exemple : <a href="{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN'}) }}">{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN' }) }}</a>
+			</td>
+			<td>
+				Permet de tester si un role spécifique {role} est attribué à un USER {id}.
+			</td>
+			<td>
+				{id} : entier<br/>
+				{role} : chaine de caractères
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				list
+			</th>
+			<td>
+				Structure : <a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a>
+			</td>
+			<td>
+				Affiche la liste de tous les USER
+			</td>
+			<td>
+				NA
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				show
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users/{id}</br>
+				Exemple : <a href="{{ path('api_v1_users_show', { 'id': 9}) }}">{{ path('api_v1_users_show', { 'id': 9}) }}</a>
+			</td>
+			<td>
+				Affiche les paramètres d'un USER
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				new
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users</br>
+			</td>
+			<td>
+				Ajoute un nouveau USER en base
+			</td>
+			<td>
+				Paramètres envoyés en format Json par POST 
+			</td>
+			<td>
+				POST
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				edit
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users/{id}</br>
+				Exemple : <a href="{{ path('api_v1_users_edit', { 'id': 9}) }}">{{ path('api_v1_users_edit', { 'id': 9}) }}</a>
+			</td>
+			<td>
+				Vérifie si le USER existe puis modifie certains paramètres de ce USER en base
+			</td>
+			<td>
+				{id} : entier <br>
+				Paramètres envoyés en format Json par PATCH 
+			</td>
+			<td>
+				PATCH
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				delete
+			</th>
+			<td>
+				Structure : /index.php/api/v1/users/{id}</br>
+				Exemple : <a href="{{ path('api_v1_users_delete', { 'id': 0}) }}">{{ path('api_v1_users_delete', { 'id': 0}) }}</a>
+			</td>
+			<td>
+				Vérifie si le USER existe puis le supprime en base
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				DELETE
+			</td>
+		</tr>
+	</tbody>
+</table><br>
+	<div class="row">
+		<div class="col-6">
+		<b>Example de json pour la création d'un utilisateur </b>(<i class="text-success">obligatoire</i> | <i class="text-primary">optionnel</i>): <br>
+		{<br>
+			<p class="text-success pl-3 mb-0">"email": "machin@machin.com",<br>
+			"password": "machin",<br>
+			"pseudo": "machin",</p>
+			<p class="text-primary pl-3 mb-0">"firstname": "machin",<br>
+			"lastname": "machin",<br>
+			"description": "My name is machin",<br>
+			"birthdate": "1925-12-25",<br>
+			"avatar": "machin.jpg"</p>
+		}
+		</div>
+		<div class="col-6">
+		<b>Example de json pour la modification d'un utilisateur </b>(<i class="text-primary">optionnel</i>): <br>
+		{<br>
+			<p class="text-primary pl-3 mb-0">"email": "machin@machin.com",<br>
+			"password": "machin",<br>
+			"pseudo": "machin",<br>
+			"firstname": "machin",<br>
+			"lastname": "machin",<br>
+			"description": "My name is machin",<br>
+			"birthdate": "1925-12-25",<br>
+			"avatar": "machin.jpg"</p>
+		}
+		</div>
 	</div>
+	<H1 class="text-center bg-dark text-light mt-3 mb-3 p-3">Routes ApiEventController</H1>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col" class="text-center">Titre</th>
+			<th scope="col">Route</th>
+			<th scope="col">détails</th>
+			<th scope="col">Variables</th>
+			<th scope="col">Méthode</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				checkEventId
+			</th>
+			<td>
+				Pas de route car cette fonction n'est utilisée que dans le controller
+			</td>
+			<td>
+				vérifie si un id existe bien en base.<br/> s'il existe, retourne l'event en réponse
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				NA
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				isAuthorOrAdmin
+			</th>
+			<td>
+				Structure : /api/v1/event/{id_event}/author_admin/{id_user}<br>
+				Exemple : <a href="{{ path('api_v1_event_author_admin', { 'id_event': 10, 'id_user': 9 }) }}">{{ path('api_v1_event_author_admin', { 'id_event': 10, 'id_user': 9 }) }}</a>
+			</td>
+			<td>
+				vérifie si l'id_event existe bien en base.<br/> s'il existe, cherche si id_user représente son organisateur<br> s'il n'est pas l'auteur, vérifie si il est ADMIN
+			</td>
+			<td>
+				{id_event} : entier<br>
+				{id_user} : entier
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				list
+			</th>
+			<td>
+				Structure : /api/v1/events<br>
+				Exemple : <a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+			</td>
+			<td>
+				  Affiche tous les événements en base. n'affiche pas certaines données sensibles des événements
+			</td>
+			<td>
+				NA
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				listAdmin
+			</th>
+			<td>
+				Structure : <a href="{{ path('api_v1_events_list_admin') }}">{{ path('api_v1_events_list_admin') }}</a>
+			</td>
+			<td>
+				 Affiche tous les événements en base avec toutes leurs données <br> restraint aux ADMIN
+			</td>
+			<td>
+				NA
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				show
+			</th>
+			<td>
+				Structure : /api/v1/events/{id} <br>
+				Exemple : <a href="{{ path('api_v1_event_show', { 'id' : 10 }) }}">{{ path('api_v1_event_show', { 'id' : 10 }) }}</a>
+			</td>
+			<td>
+				 Affiche les paramètres d'un événement.<br> N'affiche pas certaines données sensibles
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				showAdmin
+			</th>
+			<td>
+				Structure : /api/v1/events/{id}/admin <br>
+				Exemple : <a href="{{ path('api_v1_event_show_admin', { 'id' : 10 }) }}">{{ path('api_v1_event_show_admin', { 'id' : 10 }) }}</a>
+			</td>
+			<td>
+				 Affiche tous les paramètres d'un événement <br> Restraint aux ADMIN
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				GET
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				new
+			</th>
+			<td>
+				Structure : /api/v1/events <br>
+				Exemple : <a href="{{ path('api_v1_event_new') }}">{{ path('api_v1_event_new') }}</a>
+			</td>
+			<td>
+				 ajoute un nouvel événement.<br> restraint aux ADMIN et ORGANISER
+			</td>
+			<td>
+				Paramètres envoyés en format Json par POST
+			</td>
+			<td>
+				POST
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				edit
+			</th>
+			<td>
+				Structure : /api/v1/events/{id} <br>
+				Exemple : <a href="{{ path('api_v1_events_edit', { 'id' : 0 }) }}">{{ path('api_v1_events_edit' , { 'id' : 0 }) }}</a>
+			</td>
+			<td>
+				 Modifie un événement.<br> restraint aux ADMIN et ORGANISER
+			</td>
+			<td>
+				{id} : entier <br>
+				Paramètres envoyés en format Json par PATCH
+			</td>
+			<td>
+				PATCH
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="text-center align-middle">
+				delete
+			</th>
+			<td>
+				Structure : /api/v1/events/{id} <br>
+				Exemple : <a href="{{ path('api_v1_events_delete', { 'id' : 0 }) }}">{{ path('api_v1_events_delete' , { 'id' : 0 }) }}</a>
+			</td>
+			<td>
+				vérifie si l'événement existe.<br> supprime l'événement.<br> restraint aux ADMIN et ORGANISER
+			</td>
+			<td>
+				{id} : entier
+			</td>
+			<td>
+				DELETE
+			</td>
+		</tr>
+	</tbody>
+</table>
+	<div class="row">
+		<div class="col-6">
+		<b>Example de json pour la création d'un événement</b> (<i class="text-success">obligatoire</i> | <i class="text-primary">optionnel</i>): <br>
+		{<br>
+			<p class="text-success pl-3 mb-0">
+				"title": "titre de l'Event",<br>
+				"typeEvent": "type de l'Event",<br>
+				"description": "description de l'Event",<br>
+				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
+				"painfulness": 2,<br>
+				"duration": 3,<br>
+				"impactSocietal": 1,<br>
+				"impactEnvironmental": 4,<br>
+				"userMin": 50,<br>
+				"userMax": 100,<br>
+				"city": "ville où ce passe l'Event",<br>
+				"latitude": "45.55447",<br>
+				"longitude": "3.45412",<br>
+				"author": 14,<br></p>
+				<p class="text-primary pl-3 mb-0">"adress": "adresse de l'Event"<br></p>
+			}
+		</div>
+		<div class="col-6">
+			<b>Example de json pour la modification d'un événement</b> (<i class="text-primary">optionnel</i>): <br>
+			{<br>
+			<p class="text-primary pl-3 mb-0">
+				"title": "titre de l'Event",<br>
+				"typeEvent": "type de l'Event",<br>
+				"description": "description de l'Event",<br>
+				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
+				"painfulness": 2,<br>
+				"duration": 3,<br>
+				"impactSocietal": 1,<br>
+				"impactEnvironmental": 4,<br>
+				"userMin": 50,<br>
+				"userMax": 100,<br>
+				"adress": "adresse de l'Event",<br>
+				"city": "ville où ce passe l'Event",<br>
+				"latitude": "45.55447",<br>
+				"longitude": "3.45412",<br>
+				"author": 14<br>
+				</p>
+			}
+		</div>
+	</div>
+
 {% endblock %}

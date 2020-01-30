@@ -71,5 +71,6 @@ security:
     - { path: "^/", roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
   role_hierarchy:
-    ROLE_ADMIN: [ROLE_PARTNER]
+    ROLE_ADMIN: [ROLE_PARTNER, ROLE_ORGANIZER]
+    ROLE_ORGANIZER: [ROLE_USER]
     ROLE_PARTNER: [ROLE_USER]

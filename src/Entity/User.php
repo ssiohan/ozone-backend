@@ -9,12 +9,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @Vich\Uploadable
  */
 class User implements UserInterface
 {
@@ -78,6 +82,12 @@ class User implements UserInterface
      * @Groups({"users_list", "events_list"})
      */
     private $avatar;
+
+    /**
+     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
+     * @var File|null
+     */
+    private $avatarFile;
 
     /**
      * @ORM\Column(type="datetime")
@@ -283,6 +293,24 @@ class User implements UserInterface
         return $this;
     }
 
+    public function setAvatarFile(File $avatar = null)
+    {
+        $this->avatarFile = $avatar;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($avatar) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime;
+        }
+    }
+
+    public function getAvatarFile()
+    {
+        return $this->avatarFile;
+    }
+
     public function getAvatar(): ?string
     {
         return $this->avatar;
@@ -290,7 +318,7 @@ class User implements UserInterface
 
     public function setAvatar(?string $avatar): self
     {
-        $this->avatar = '/asserts/avatars/'.$avatar;
+        $this->avatar = $avatar;
 
         return $this;
     }

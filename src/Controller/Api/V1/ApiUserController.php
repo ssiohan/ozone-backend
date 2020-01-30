@@ -65,7 +65,7 @@ class ApiUserController extends AbstractController
     }
 
     /**
-     * @Route("/is_admin/{id}", name="user_is_admin", methods={"GET"})
+     * @Route("/users/{id}/is_admin", name="user_is_admin", methods={"GET"})
      */
     public function isAdmin($id, RoleRepository $roleRepository)
     {
@@ -98,7 +98,7 @@ class ApiUserController extends AbstractController
     }
 
     /**
-     * @Route("/has_role/{id}/{role}", name="user_has_role", methods={"GET"})
+     * @Route("/users/{id}/has_role/{role}", name="user_has_role", methods={"GET"})
      */
     public function userHasRole($id, $role, RoleRepository $roleRepository)
     {

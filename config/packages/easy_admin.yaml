@@ -1,16 +1,109 @@
 easy_admin:
-  site_name: '<img src="/public/bundles/easyadmin/images/logo_sans_fond.png" width="10%"/> oZone Admin Page'
+  site_name: '<img src="/asserts/others/logo_sans_fond.png" width="10%"/><strong style="font-size: 250%;"> oZone</strong> <em style="font-size: 120%;">{ Back-Office }</em>'
+  formats:
+    date: "d/m/Y"
+    time: "H:i"
+    datetime: "d/m/Y H:i:s"
+  
+  # Gestion de l'affichage des différentes entitées
   entities:
-    # List the entity class name you want to manage
+    # Evénements
     Evenements:
       class: App\Entity\Event
-      list: ["show"]
-    Roles:
-      class: App\Entity\Role
-      list: ["show"]
+      list:
+        actions:
+          - { name: "show", icon: "eye", label: "" }
+          - { name: "edit", icon: "edit", label: "" }
+          - { name: "delete", icon: "trash", label: "" }
+        fields:
+          - { label: 'ID', property: 'id', type: 'integer', sortable: true }
+          - { label: 'Image', property: 'image', type: 'image', base_path: '%app.path.images%', template: 'vich_uploader_image.html.twig' }
+          - { label: 'Type', property: 'type_event', type: 'text', sortable: true }
+          - { label: 'Titre', property: 'title', type: 'text', sortable: true }
+          - { label: 'Description', property: 'description', type: 'text', sortable: true }
+          - { label: 'Organisateur', property: 'author.pseudo', type: 'text', sortable: true }
+          - { label: 'Status', property: 'status', type: 'text', sortable: true }
+          - { label: 'Date', property: 'date_event', type: 'datetime', sortable: true }
+          - { label: 'Adresse', property: 'adress', type: 'text', sortable: true }
+          - { label: 'Ville', property: 'city', type: 'text', sortable: true }
+          - { label: 'Lat', property: 'latitude', type: 'text', sortable: true }
+          - { label: 'Long', property: 'longitude', type: 'text', sortable: true }
+          - { label: 'Dif', property: 'painfulness', type: 'integer', sortable: true }
+          - { label: 'Dur', property: 'duration', type: 'integer', sortable: true }
+          - { label: 'Soc', property: 'impact_societal', type: 'integer', sortable: true }
+          - { label: 'Env', property: 'impact_environmental', type: 'integer', sortable: true }
+          - { label: 'Min', property: 'user_min', type: 'integer', sortable: true }
+          - { label: 'Max', property: 'user_max', type: 'integer', sortable: true }
+      form:
+        fields:
+          - { label: 'Type', property: 'type_event', type: 'text' }
+          - { label: 'Titre', property: 'title', type: 'text' }
+          - { label: 'Description', property: 'description', type: 'textarea' }
+          - { label: 'Organisateur', property: 'author' }
+          - { label: 'Status', property: 'status', type: 'text' }
+          - { label: 'Date', property: 'date_event', type: 'datetime' }
+          - { label: 'Adresse', property: 'adress', type: 'textarea' }
+          - { label: 'Ville', property: 'city', type: 'text' }
+          - { label: 'Lat', property: 'latitude', type: 'text' }
+          - { label: 'Long', property: 'longitude', type: 'text' }
+          - { label: 'Difficulté', property: 'painfulness', type: 'integer' }
+          - { label: 'Durée', property: 'duration', type: 'integer' }
+          - { label: 'Impact Sociétal', property: 'impact_societal', type: 'integer' }
+          - { label: 'Impact Environnemental', property: 'impact_environmental', type: 'integer' }
+          - { label: 'Participants Min', property: 'user_min', type: 'integer' }
+          - { label: 'Participants Max', property: 'user_max', type: 'integer' }
+          - { label: 'Image', property: 'imageFile', type: 'vich_image' }
+    # Utilisateurs
     Utilisateurs:
       class: App\Entity\User
-      list: ["show"]
+      list:
+        actions:
+          - { name: "show", icon: "eye", label: "" }
+          - { name: "edit", icon: "edit", label: "" }
+          - { name: "delete", icon: "trash", label: "" }
+        fields:
+          - { label: 'ID', property: 'id', type: 'integer', sortable: true }
+          - { label: 'Avatar', property: 'avatar', type: 'avatar', base_path: '%app.path.images%', template: 'vich_uploader_avatar.html.twig' }
+          - { label: 'Pseudo', property: 'pseudo', type: 'text', sortable: true }
+          - { label: 'Prénom', property: 'firstname', type: 'text', sortable: true }
+          - { label: 'Nom', property: 'lastname', type: 'text', sortable: true }
+          - { label: 'Email', property: 'email', type: 'email', sortable: true }
+          - { label: 'Description', property: 'description', type: 'text', sortable: true }
+          - { label: 'Date Naissance', property: 'birthdate', type: 'datetime', sortable: true }
+          - { label: 'Rôles', property: 'roles', type: 'array', sortable: true }
+          - { label: 'Expérience', property: 'experience', type: 'integer', sortable: true }
+          - { label: 'Crédits', property: 'credit', type: 'integer', sortable: true }
+          - { label: 'Status', property: 'status', type: 'toggle', sortable: true }
+      form:
+        fields:
+          - { label: 'Pseudo', property: 'pseudo', type: 'text' }
+          - { label: 'Prénom', property: 'firstname', type: 'text' }
+          - { label: 'Nom', property: 'lastname', type: 'text' }
+          - { label: 'Email', property: 'email', type: 'email' }
+          - { label: 'Description', property: 'description', type: 'textarea' }
+          - { label: 'Date Naissance', property: 'birthdate', type: 'date' }
+          - { label: 'Rôles', property: 'roles', type: 'collection' }
+          - { label: 'Expérience', property: 'experience', type: 'integer' }
+          - { label: 'Crédits', property: 'credit', type: 'integer' }
+          - { label: 'Status', property: 'status' }
+          - { label: 'Avatar', property: 'avatarFile', type: 'vich_image' }
+    # Rôles      
+    Roles:
+      class: App\Entity\Role
+      list:
+        actions:
+          - { name: "show", icon: "eye", label: "" }
+          - { name: "edit", icon: "edit", label: "" }
+          - { name: "delete", icon: "trash", label: "" }
+        fields:
+          - { label: 'ID', property: 'id'  }
+          - { label: 'Nom', property: 'name' }
+          - { label: 'Label', property: 'label' }
+      form:
+        fields:
+          - { label: 'Nom', property: 'name' }
+          - { label: 'Label', property: 'label' }
+  # Gestion de l'affichage de l'avater et du nom de l'user connecté
   user:
     # this method/property must return the string representation of the user
     # (Symfony will look for getFullName(), isFullName(), ..., and 'fullName' property)
@@ -19,3 +112,8 @@ easy_admin:
     # this method/property must return the absolute URL of the user avatar image
     # (Symfony will look for getGravatar(), isGravatar(), ..., and 'gravatar' property)
     avatar_property_path: "avatar"
+
+  design:
+    brand_color: "rgba(26, 188, 156, 0.85)"
+    form_theme:
+      - '@EasyAdmin/form/bootstrap_4.html.twig'

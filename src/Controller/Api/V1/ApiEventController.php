@@ -58,7 +58,7 @@ class ApiEventController extends AbstractController
 
     // TODO: public function isAuthorOrAdmin()
      /**
-     * @Route("/event/{id_event}/authoradmin/{id_user}", name="event_author_admin", methods={"GET"})
+     * @Route("/event/{id_event}/author_admin/{id_user}", name="event_author_admin", methods={"GET"})
      */
     public function isAuthorOrAdmin($id_event, $id_user, RoleRepository $roleRepository)
     {
@@ -166,7 +166,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events", name="event_new", methods={"POST"})
-     * @isGranted("ROLE_USER")
+     * @isGranted("ROLE_ORGANIZER")
      */
     public function new(
         Request $request,
@@ -204,7 +204,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events/{id}", name="events_edit", methods={"PATCH"})
-     * @isGranted("ROLE_USER")
+     * @isGranted("ROLE_ORGANIZER")
      */
     public function edit(Request $request, EntityManagerInterface $em, $id)
     {
@@ -251,7 +251,7 @@ class ApiEventController extends AbstractController
 
     /**
      * @Route("/events/{id}", name="events_delete", methods={"DELETE"})
-     * @isGranted("ROLE_USER")
+     * @isGranted("ROLE_ORGANIZER")
      */
     public function delete(EntityManagerInterface $em, $id)
     {
