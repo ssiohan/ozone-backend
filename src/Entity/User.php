@@ -37,21 +37,16 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups({"users_list", "events_list"})
      */
-    private $roles = [];
+    private $pseudo;
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
-
-    /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -78,22 +73,16 @@ class User implements UserInterface
     private $birthdate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"users_list", "events_list"})
      */
-    private $createdAt;
+    private $avatar;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
+     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
+     * @var File|null
      */
-    private $updatedAt;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"users_list", "events_list"})
-     */
-    private $status;
+    private $avatarFile;
 
     /**
      * @ORM\Column(type="integer")
@@ -108,16 +97,22 @@ class User implements UserInterface
     private $credit;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="boolean")
      * @Groups({"users_list", "events_list"})
      */
-    private $avatar;
+    private $status;
 
     /**
-     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
-     * @var File|null
+     * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
      */
-    private $avatarFile;
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="author")
@@ -130,6 +125,11 @@ class User implements UserInterface
      * @Groups({"users_list"})
      */
     private $userEvents;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)

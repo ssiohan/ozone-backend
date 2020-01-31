@@ -192,30 +192,35 @@
 </table><br>
 	<div class="row">
 		<div class="col-6">
-		<b>Example de json pour la création d'un utilisateur </b>(<i class="text-success">obligatoire</i> | <i class="text-primary">optionnel</i>): <br>
-		{<br>
-			<p class="text-success pl-3 mb-0">"email": "machin@machin.com",<br>
-			"password": "machin",<br>
-			"pseudo": "machin",</p>
-			<p class="text-primary pl-3 mb-0">"firstname": "machin",<br>
-			"lastname": "machin",<br>
-			"description": "My name is machin",<br>
+		<b>Example de json pour la création d'un utilisateur </b>(<i class="text-warning">requis</i> | <i class="text-primary">optionnel</i>): <br>
+		<strong class="text-danger">{</strong>
+		<br>
+			<p class="text-warning pl-3 mb-0">"email": "machin@machin.com",<br>
+			"pseudo": "machin",<br>
+			"password": "password",</p>
+			<p class="text-primary pl-3 mb-0">"firstname": "Ma",<br>
+			"lastname": "Chin",<br>
+			"description": "Ecolo engâgé !",<br>
 			"birthdate": "1925-12-25",<br>
 			"avatar": "machin.jpg"</p>
-		}
+		<strong class="text-danger">}</strong>
 		</div>
 		<div class="col-6">
 		<b>Example de json pour la modification d'un utilisateur </b>(<i class="text-primary">optionnel</i>): <br>
-		{<br>
+		<strong class="text-danger">}</strong>
+		<br>
 			<p class="text-primary pl-3 mb-0">"email": "machin@machin.com",<br>
-			"password": "machin",<br>
 			"pseudo": "machin",<br>
-			"firstname": "machin",<br>
-			"lastname": "machin",<br>
-			"description": "My name is machin",<br>
+			"password": "password",<br>
+			"firstname": "Ma",<br>
+			"lastname": "Chin",<br>
+			"description": "Ecolo engâgé !",<br>
 			"birthdate": "1925-12-25",<br>
-			"avatar": "machin.jpg"</p>
-		}
+			"avatar": "machin.jpg"<br>
+			"experience": 20,<br>
+			"credit": 10,<br>
+			"status": 1,</p>
+		<strong class="text-danger">}</strong>
 		</div>
 	</div>
 	<H1 class="text-center bg-dark text-light mt-3 mb-3 p-3">Routes ApiEventController</H1>
@@ -396,12 +401,13 @@
 </table>
 	<div class="row">
 		<div class="col-6">
-		<b>Example de json pour la création d'un événement</b> (<i class="text-success">obligatoire</i> | <i class="text-primary">optionnel</i>): <br>
-		{<br>
-			<p class="text-success pl-3 mb-0">
-				"title": "titre de l'Event",<br>
-				"typeEvent": "type de l'Event",<br>
-				"description": "description de l'Event",<br>
+		<b>Example de JSON pour la création d'un événement</b> (<i class="text-warning">requis</i> | <i class="text-primary">optionnel</i>) : <br>
+		<strong class="text-danger">{</strong><br>
+			<p class="text-warning pl-3 mb-0">
+				"typeEvent": "Atelier",<br>
+				"title": "Apprendre la permaculture",<br>
+				"description": "Informations complémentaires...",<br>
+				"status": "Planifié",<br>
 				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
 				"painfulness": 2,<br>
 				"duration": 3,<br>
@@ -409,20 +415,26 @@
 				"impactEnvironmental": 4,<br>
 				"userMin": 50,<br>
 				"userMax": 100,<br>
-				"city": "ville où ce passe l'Event",<br>
+				"city": "Ville où se passe l'événement",<br>
 				"latitude": "45.55447",<br>
 				"longitude": "3.45412",<br>
 				"author": 14,<br></p>
-				<p class="text-primary pl-3 mb-0">"adress": "adresse de l'Event"<br></p>
-			}
+			<p class="text-primary pl-3 mb-0">
+				"adress": "Adresse de l'Event"<br>
+				"image": "image.jpg"<br>
+				"bonus": 2,<br>
+			</p>
+			<strong class="text-danger">}</strong>
 		</div>
 		<div class="col-6">
-			<b>Example de json pour la modification d'un événement</b> (<i class="text-primary">optionnel</i>): <br>
-			{<br>
-			<p class="text-primary pl-3 mb-0">
-				"title": "titre de l'Event",<br>
+			<b>Example de JSON pour la modification d'un événement</b> (<i class="text-primary">optionnel</i>) : <br>
+			<strong class="text-danger">{</strong>
+			<br>
+			<p class="text-warning pl-3 mb-0">
 				"typeEvent": "type de l'Event",<br>
+				"title": "titre de l'Event",<br>
 				"description": "description de l'Event",<br>
+				"status": "Planifié",<br>
 				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
 				"painfulness": 2,<br>
 				"duration": 3,<br>
@@ -430,13 +442,16 @@
 				"impactEnvironmental": 4,<br>
 				"userMin": 50,<br>
 				"userMax": 100,<br>
-				"adress": "adresse de l'Event",<br>
-				"city": "ville où ce passe l'Event",<br>
+				"city": "ville où ce passe l'événement",<br>
 				"latitude": "45.55447",<br>
 				"longitude": "3.45412",<br>
-				"author": 14<br>
-				</p>
-			}
+				"author": 14,<br></p>
+			<p class="text-primary pl-3 mb-0">
+				"adress": "adresse de l'Event"<br>
+				"image": "image.jpg"<br>
+				"bonus": 2,<br>
+			</p>
+			<strong class="text-danger">}</strong>
 		</div>
 	</div>
 	{% endif %}

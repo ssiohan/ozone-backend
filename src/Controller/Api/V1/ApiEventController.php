@@ -56,7 +56,6 @@ class ApiEventController extends AbstractController
         }
     }
 
-    // TODO: public function isAuthorOrAdmin()
      /**
      * @Route("/event/{id_event}/author_admin/{id_user}", name="event_author_admin", methods={"GET"})
      */

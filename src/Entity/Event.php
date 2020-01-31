@@ -24,16 +24,16 @@ class Event
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $title;
-
-    /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
     private $typeEvent;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $title;
 
     /**
      * @ORM\Column(type="text")
@@ -42,28 +42,16 @@ class Event
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $updatedAt;
+    private $status;
 
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"users_list", "events_list"})
      */
     private $dateEvent;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $status;
 
     /**
      * @ORM\Column(type="smallint")
@@ -102,12 +90,6 @@ class Event
     private $userMax;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $bonus;
-
-    /**
      * @ORM\Column(type="string", length=150, nullable=true)
      * @Groups({"users_list", "events_list"})
      */
@@ -132,13 +114,6 @@ class Event
     private $longitude;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdEvents")
-     * @ORM\JoinColumn(nullable=false)
-     * @Groups({"events_list"})
-     */
-    private $author;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"events_list"})
      */
@@ -149,6 +124,31 @@ class Event
      * @var File|null
      */
     private $imageFile;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $bonus;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdEvents")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"events_list"})
+     */
+    private $author;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\EventUser", mappedBy="event", orphanRemoval=true)
