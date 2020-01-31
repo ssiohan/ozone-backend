@@ -90,12 +90,6 @@ class Event
     private $userMax;
 
     /**
-     * @ORM\Column(type="string", length=150, nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $adress;
-
-    /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
@@ -112,6 +106,12 @@ class Event
      * @Groups({"users_list", "events_list"})
      */
     private $longitude;
+
+    /**
+     * @ORM\Column(type="string", length=150, nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $adress;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

@@ -37,16 +37,16 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $pseudo;
-
-    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=100, unique=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
