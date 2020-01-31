@@ -1,5 +1,5 @@
 easy_admin:
-  site_name: '<img src="/asserts/others/logo_sans_fond.png" width="10%"/><strong style="font-size: 250%;"> oZone</strong> <em style="font-size: 120%;">{ Back-Office }</em>'
+  site_name: '<img src="/asserts/others/logo_sans_fond.png" width="10%"/><strong style="font-size: 250%;"> oZone</strong><em style="font-size: 120%;">{ Back-Office }</em>'
   formats:
     date: "d/m/Y"
     time: "H:i"
@@ -12,7 +12,7 @@ easy_admin:
       class: App\Entity\Event
       list:
         actions:
-          - { name: "show", icon: "eye", label: "", class_css: "text-dark" }
+          - { name: "show", icon: "eye", label: "" }
           - { name: "edit", icon: "edit", label: "" }
           - { name: "delete", icon: "trash", label: "" }
         fields:
