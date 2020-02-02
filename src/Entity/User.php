@@ -155,6 +155,16 @@ class User implements UserInterface
         return (string) $this->getEmail();
     }
 
+    public function serialize()
+    {
+        return serialize($this->id);
+    }
+
+    public function unserialize($serialized)
+    {
+        $this->id = unserialize($serialized);
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -169,6 +169,16 @@ class Event
         return (string) $this->getTitle();
     }
 
+    public function serialize()
+    {
+        return serialize($this->id);
+    }
+
+    public function unserialize($serialized)
+    {
+        $this->id = unserialize($serialized);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
