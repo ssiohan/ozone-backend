@@ -155,14 +155,22 @@ class User implements UserInterface
         return (string) $this->getEmail();
     }
 
-    public function serialize()
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
     {
-        return serialize($this->id);
+        // add $this->salt too if you don't use Bcrypt or Argon2i
+        return serialize([$this->avatar]);
     }
 
-    public function unserialize($serialized)
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized): void
     {
-        $this->id = unserialize($serialized);
+        // add $this->salt too if you don't use Bcrypt or Argon2i
+        [$this->avatar] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function getId(): ?int
