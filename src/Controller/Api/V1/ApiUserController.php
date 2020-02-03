@@ -8,7 +8,6 @@ use App\Entity\UserRole;
 use App\Form\UserType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use App\Repository\UserRoleRepository;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -168,7 +167,7 @@ class ApiUserController extends AbstractController
         $userRoles = $user->getRoles();
 
         // Pour chacun des rôles on vérifie si une relation existe déjà dans la table user_role
-        // Si çà n'existe pas on ajoute la relation, si elle existe déjà on ne fait rien
+        // Si çà n'existe pas on ajoute la relation, si elle existe déjà on ne fait rien...
         foreach ($userRoles as $userRole) {
             $thisUserRoles[] = $roleRepository->findOneBy(['name' => $userRole]);
             foreach ($thisUserRoles as $role) {
@@ -241,8 +240,7 @@ class ApiUserController extends AbstractController
     public function new(
         Request $request,
         SerializerInterface $serializer,
-        EntityManagerInterface $em,
-        RoleRepository $roleRepository
+        EntityManagerInterface $em
     ) {
         // On récupère le contenu de la requête envoyé en POST au format JSON
         $userJson = $request->getContent();
@@ -256,20 +254,16 @@ class ApiUserController extends AbstractController
                 $user,
                 $user->getPassword()
             ));
-
+            
+            // On ajoute le ROLE_USER dans le champ rôles de l'User
+            $user->setRoles(["ROLE_USER"]);
             // On créé le nouvel utilisateur en base de données,
             // il récupère donc un "id" auto-increment
             $em->persist($user);
             $em->flush();
 
-            // On récupère l'id du ROLE_USER
-            $idRoleUser = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
-
-            // On créé le UserRole à partir du $user et $idRoleUser récupérés
-            $userRole = new UserRole();
-            $userRole->setUser($user)->setRole($idRoleUser);
-            $em->persist($userRole);
-            $em->flush();
+            // Création des associations dans la table user_role
+            $this->setUserRoles($user->getId());
 
             return $this->json(
                 $user,
@@ -280,7 +274,7 @@ class ApiUserController extends AbstractController
         } catch (UniqueConstraintViolationException $uniqueException) {
             return $this->json([
                 'status' => 400,
-                'alert' => 'This email or username already exist in database !',
+                'alert' => 'Email ou pseudo déjà utilisé !',
                 'error_message' => $uniqueException->getMessage()
             ], 400);
         }
