@@ -115,7 +115,7 @@ class Event
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"events_list"})
+     * @Groups({"users_list", "events_list"})
      */
     private $image;
 
