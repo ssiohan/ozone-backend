@@ -9,12 +9,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @Vich\Uploadable
  */
 class User implements UserInterface
 {
@@ -28,14 +32,9 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $email;
-
-    /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
 
     /**
      * @var string The hashed password
@@ -69,7 +68,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $birthdate;
 
@@ -78,6 +77,30 @@ class User implements UserInterface
      * @Groups({"users_list", "events_list"})
      */
     private $avatar;
+
+    /**
+     * @Vich\UploadableField(mapping="images", fileNameProperty="avatar")
+     * @var File|null
+     */
+    private $avatarFile;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list"})
+     */
+    private $experience;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups({"users_list", "events_list_admin"})
+     */
+    private $credit;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"users_list", "events_list"})
+     */
+    private $status;
 
     /**
      * @ORM\Column(type="datetime")
@@ -92,24 +115,6 @@ class User implements UserInterface
     private $updatedAt;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"users_list", "events_list"})
-     */
-    private $status;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"users_list", "events_list"})
-     */
-    private $experience;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @Groups({"users_list", "events_list"})
-     */
-    private $credit;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="author")
      * @Groups({"users_list"})
      */
@@ -122,8 +127,13 @@ class User implements UserInterface
     private $userEvents;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\UserRole", mappedBy="user", orphanRemoval=true)
-     * @Groups({"users_list", "events_list"})
+     * @Groups({"users_list", "events_list_admin"})
      */
     private $userRoles;
 
@@ -138,6 +148,27 @@ class User implements UserInterface
         $this->status = true;
         $this->experience = 0;
         $this->credit = 0;
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getEmail();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
+    {
+        return serialize([$this->avatar]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized): void
+    {
+        [$this->avatar] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function getId(): ?int
@@ -276,6 +307,24 @@ class User implements UserInterface
         $this->birthdate = $birthdate;
 
         return $this;
+    }
+
+    public function setAvatarFile(File $avatar = null)
+    {
+        $this->avatarFile = $avatar;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($avatar) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime;
+        }
+    }
+
+    public function getAvatarFile()
+    {
+        return $this->avatarFile;
     }
 
     public function getAvatar(): ?string

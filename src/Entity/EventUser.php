@@ -32,6 +32,11 @@ class EventUser
      */
     private $attendance;
 
+    public function __toString()
+    {
+        return (string) $this->getEvent() . ' => ' . $this->getUser();
+    }
+
     public function getEvent(): ?Event
     {
         return $this->event;

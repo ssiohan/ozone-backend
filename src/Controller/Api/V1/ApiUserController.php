@@ -2,11 +2,13 @@
 
 namespace App\Controller\Api\V1;
 
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\UserRole;
 use App\Form\UserType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserRoleRepository;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,9 +45,9 @@ class ApiUserController extends AbstractController
         // en testant que $id est bien de type numeric
         if (!is_numeric($id)) {
             return new JsonResponse(
-                ['error' => "User ID '{$id}' not valid !"],
+                ['error' => "ID({$id}) format invalide !"],
                 Response::HTTP_BAD_REQUEST
-            ); 
+            );
         } else {
             // On récupère l'utilisateur en base de données
             $entityManager = $this->getDoctrine()->getManager();
@@ -54,7 +56,7 @@ class ApiUserController extends AbstractController
             // on retourne une erreur 400 en JSON
             if (empty($user)) {
                 return new JsonResponse(
-                    ['error' => "User with ID '{$id}' not found !"],
+                    ['error' => "ID({$id}) n'existe pas !"],
                     Response::HTTP_BAD_REQUEST
                 );
             } else {
@@ -64,27 +66,138 @@ class ApiUserController extends AbstractController
         }
     }
 
-    // TODO: public function isUserOrAdmin()
     /**
-     * @Route("/verif/{id}", name="users_access", methods={"GET"})
+     * @Route("/get_user_id/{email}", name="get_user_id", methods={"GET"})
      */
-    public function isUserOrAdmin($id, RoleRepository $roleRepository)
+    public function getUserId($email)
     {
-        $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
-        //on va chercher l'instance de l'utilisateur avec l'affectation du ROLE_ADMIN
+        // On récupère l'utilisateur en base de données
         $entityManager = $this->getDoctrine()->getManager();
-        $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
-            'user' => $id,
-            'role' => $idRoleAdmin
-        ]);
-        //si la recherche ne trouve rien, elle retourne null
-        if($isAdmin!=null){ $isAdmin=TRUE; }else{ $isAdmin=FALSE; }
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        return new JsonResponse(['isAdmin' => $isAdmin]);
+        return new JsonResponse(['User ID' => $user->getId()]);
+    }
+
+    /**
+     * @Route("/users/{id}/is_admin", name="user_is_admin", methods={"GET"})
+     */
+    public function isAdmin($id, RoleRepository $roleRepository)
+    {
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
+
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
+        } else {
+            $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
+            // On va chercher l'instance de l'utilisateur avec l'affectation du ROLE_ADMIN
+            $entityManager = $this->getDoctrine()->getManager();
+            $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
+                'user' => $id,
+                'role' => $idRoleAdmin
+            ]);
+            // Si la recherche ne trouve rien, elle retourne null
+            if ($isAdmin != null) {
+                $isAdmin = TRUE;
+            } else {
+                $isAdmin = FALSE;
+            }
+
+            return new JsonResponse(['isAdmin' => $isAdmin]);
+        }
+    }
+
+    /**
+     * @Route("/users/{id}/has_role/{role}", name="user_has_role", methods={"GET"})
+     */
+    public function userHasRole($id, $role, RoleRepository $roleRepository)
+    {
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
+
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
+        } else {
+            // récupère l'id du role spécifié
+            $idRole = $roleRepository->findOneBy(['name' => "$role"]);
+            $em = $this->getDoctrine()->getManager();
+
+            // on cherche une instance du role et de l'utilisateur dans l'entité UserRole
+            $isRole = $em->getRepository(UserRole::class)->findOneBy([
+                'user' => $id,
+                'role' => $idRole
+            ]);
+
+            //si la recherche ne trouve rien, elle retourne null
+            if ($isRole != null) {
+                $isRole = TRUE;
+            } else {
+                $isRole = FALSE;
+            }
+
+            return new JsonResponse([
+                "has" => (bool) $isRole,
+                "role" => (string) $role
+            ]);
+        }
+    }
+
+    /**
+     * Mise à jour automatique des relations dans la table UserRole,
+     * par rapport aux rôles fournis dans le champ rôles de la table User.
+     */
+    public function setUserRoles($id)
+    {
+        // Récupération des différents Repositories nécéssaires
+        $em = $this->getDoctrine()->getManager();
+        $userRoleRepository = $em->getRepository(UserRole::class);
+        $roleRepository = $em->getRepository(Role::class);
+        $userRepository = $em->getRepository(User::class);
+
+        // On récupère l'user dont l'id est fourni
+        $user = $userRepository->findOneBy(['id' => $id]);
+        // On récupère ses rôles présents dans le champ rôles User
+        $userRoles = $user->getRoles();
+
+        // Pour chacun des rôles on vérifie si une relation existe déjà dans la table user_role
+        // Si çà n'existe pas on ajoute la relation, si elle existe déjà on ne fait rien
+        foreach ($userRoles as $userRole) {
+            $thisUserRoles[] = $roleRepository->findOneBy(['name' => $userRole]);
+            foreach ($thisUserRoles as $role) {
+                $roleExist = $userRoleRepository->findBy(['user' => $id, 'role' => $role]);
+
+                // Récupérer l'équivalent de $roleExist via Custom Query
+                // $query = $em->createQuery(
+                //     'SELECT ur
+                //     FROM App\Entity\UserRole ur
+                //     WHERE ur.user = :idu
+                //     AND ur.role = :idr '
+                // )->setParameter('idu', $id)->setParameter('idr', $role);
+                // $resultat = $query->getResult();
+                // dd($resultat);
+
+                if (empty($roleExist)) {
+
+                    $userRole = new UserRole();
+                    $userRole->setUser($user)->setRole($role);
+                    $em->persist($userRole);
+                    $em->flush();
+                }
+            }
+        }
     }
 
     /**
      * @Route("/users", name="users_list", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function list(UserRepository $userRepository)
     {
@@ -99,6 +212,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_show", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function show($id)
     {
@@ -174,7 +288,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_edit", methods={"PATCH"})
-     * @isGranted("ROLE_ADMIN")
+     * @isGranted("ROLE_USER")
      */
     public function edit(Request $request, EntityManagerInterface $em, $id)
     {
@@ -217,6 +331,10 @@ class ApiUserController extends AbstractController
                 // On met à jour l'user en database
                 $em->persist($user);
                 $em->flush();
+
+                // Mise à jour auto des rôles lors de l'edition de l'user
+                $this->setUserRoles($id);
+
                 return $this->json(
                     $user,
                     201,
@@ -235,7 +353,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}", name="users_delete", methods={"DELETE"})
-     * @isGranted("ROLE_ADMIN")
+     * @isGranted("ROLE_USER")
      */
     public function delete(EntityManagerInterface $em, $id)
     {

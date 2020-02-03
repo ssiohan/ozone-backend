@@ -5,10 +5,13 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
+ * @Vich\Uploadable
  */
 class Event
 {
@@ -21,16 +24,16 @@ class Event
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $title;
-
-    /**
      * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
     private $typeEvent;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $title;
 
     /**
      * @ORM\Column(type="text")
@@ -39,28 +42,16 @@ class Event
     private $description;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $updatedAt;
+    private $status;
 
     /**
      * @ORM\Column(type="datetime")
      * @Groups({"users_list", "events_list"})
      */
     private $dateEvent;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $status;
 
     /**
      * @ORM\Column(type="smallint")
@@ -99,16 +90,10 @@ class Event
     private $userMax;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="string", length=50)
      * @Groups({"users_list", "events_list"})
      */
-    private $bonus;
-
-    /**
-     * @ORM\Column(type="string", length=150, nullable=true)
-     * @Groups({"users_list", "events_list"})
-     */
-    private $adress;
+    private $city;
 
     /**
      * @ORM\Column(type="string", length=20)
@@ -121,6 +106,42 @@ class Event
      * @Groups({"users_list", "events_list"})
      */
     private $longitude;
+
+    /**
+     * @ORM\Column(type="string", length=150, nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $adress;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"events_list"})
+     */
+    private $image;
+
+    /**
+     * @Vich\UploadableField(mapping="images", fileNameProperty="image")
+     * @var File|null
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $bonus;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Groups({"users_list", "events_list"})
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users_list", "events_list"})
+     */
+    private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="createdEvents")
@@ -141,6 +162,27 @@ class Event
 
         $this->createdAt = new \DateTime;
         $this->status = "Planifié";
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getTitle();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
+    {
+        return serialize([$this->image]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized): void
+    {
+        [$this->image] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function getId(): ?int
@@ -212,6 +254,7 @@ class Event
     {
         return $this->dateEvent;
     }
+
 
     public function setDateEvent(\DateTimeInterface $dateEvent): self
     {
@@ -328,6 +371,18 @@ class Event
         return $this;
     }
 
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
     public function getLatitude(): ?string
     {
         return $this->latitude;
@@ -364,6 +419,36 @@ class Event
         return $this;
     }
 
+    public function setImageFile(File $image = null)
+    {
+        $this->imageFile = $image;
+
+        // VERY IMPORTANT:
+        // It is required that at least one field changes if you are using Doctrine,
+        // otherwise the event listeners won't be called and the file is lost
+        if ($image) {
+            // if 'updatedAt' is not defined in your entity, use another property
+            $this->updatedAt = new \DateTime;
+        }
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
     /**
      * @return Collection|EventUser[]
      */
@@ -394,5 +479,4 @@ class Event
 
         return $this;
     }
-
 }

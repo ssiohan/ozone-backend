@@ -14,21 +14,506 @@
 		}
 	</style>
 	<div class="example-wrapper text-center">
-		<h1>
-			{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-				Connecté en tant que
-				{{ app.user.pseudo }}<br>
-				<a href="{{ path('app_logout') }}" class="btn btn-success">LOGOUT</a><hr>
-        </h1>
-				<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a><hr>
-				<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
-			{% else %}
-				Pour accéder à l'API<br>
-                Veuillez vous connecter !<br>
-				<a href="{{ path('app_register') }}" class="btn btn-success">REGISTER</a>
-				<a href="{{ path('app_login') }}" class="btn btn-success">LOGIN</a>
-        </h1>
-			{% endif %}
+		{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+			<h2 class="alert alert-success p-3">
+				<strong>Bienvenue sur l'API d'oZone mon cher
+					<div class="badge badge-success">{{ app.user.pseudo }}</strong>
+				</div>
+				!
+			</h2><br>
+			<a href="{{ path('easyadmin') }}" class="btn btn-primary"><strong>ADMIN</strong></a>
+			<a href="{{ path('app_logout') }}" class="btn btn-danger"><strong>LOGOUT</strong></a>
+		{% else %}
+			<h2 class="alert alert-danger p-3">
+				<strong>Pour accéder à l'API, veuillez vous connecter !</strong>
+			</h2><br>
+			<a href="{{ path('app_register') }}" class="btn btn-success"><strong>REGISTER</strong></a>
+			<a href="{{ path('app_login') }}" class="btn btn-success"><strong>LOGIN</strong></a>
+		{% endif %}
 		<br>
+	</div><br>
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+	<p class="alert alert-info mt-3 mb-3 p-3 h6 text-center">
+	Pour vos requêtes vers l'API, veuillez utiliser l'url :<br>
+	https://api.geekoz.fr + colonne <strong class="badge badge-info">Route</strong> des tableaux ci-dessous<br>
+	<strong>Exemple :</strong>
+	<a 
+	href="https://api.geekoz.fr/api/v1/events" 
+	class="alert-link text-info">https://api.geekoz.fr/api/v1/events
+	</a>
+	<p class="alert alert-danger mt-3 mb-3 p-3 h6 text-center">
+	Attention toutes les données envoyées et reçus doivent absolument être au format JSON !
+	</p>
+	<h2 class="text-center bg-dark text-light mt-3 mb-3 p-3">Pour la gestion des utilisateurs (ApiUserController)</h2>
+<table class="table table-striped text-center">
+	<thead>
+		<tr>
+			<th scope="col">Titre</th>
+			<th scope="col">Méthode</th>
+			<th scope="col">Route</th>
+			<th scope="col">Variables</th>
+			<th scope="col">Détails</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row" class="align-middle">
+				checkUserId
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-secondary">NA</strong>
+			</td>
+			<td class="align-middle">
+				Pas de route car cette fonction n'est utilisée qu'au sein du controller
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si l'id demandé est d'un format correct
+				et s'il existe bien en base.
+				S'il existe, retourne l'utilisateur en réponse
+				Sinon retourne le message d'erreur correspondant
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				getUserId
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/get_user_id/{email}<br/> 
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}">{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}</a>
+			</td>
+			<td class="align-middle">
+				{email} : chaîne de caractères
+			</td>
+			<td class="align-middle">
+				Retourne l'ID de l'utilisateur dont l'email est fourni en paramètre de l'url
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				isAdmin
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}/is_admin<br/> 
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_user_is_admin', { 'id': 9 }) }}">{{ path('api_v1_user_is_admin', { 'id': 9 }) }}</a>
+			</td class="align-middle">
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si l'utilisateur dont l'id est fourni en paramètre d'url est Administrateur. 
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				userHasRole
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}/has_role/{role}</br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN'}) }}">{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN' }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier<br/>
+				{role} : chaine de caractères
+			</td>
+			<td class="align-middle">
+				Permet de tester si un {role} spécifique est attribué à un {id} utilisateur fourni en url.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				list
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				<a href="{{ path('api_v1_users_list') }}">{{ path('api_v1_users_list') }}</a>
+			</td>
+			<td class="align-middle">
+				NA
+			</td>
+			<td class="align-middle">
+				Affichage de la liste de tous les utilisateurs
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				show
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}</br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_users_show', { 'id': 9}) }}">{{ path('api_v1_users_show', { 'id': 9}) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Affichage d'un utilisateur dont l'id est fourni en url
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				new
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-primary">POST</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users</br>
+			</td>
+			<td class="align-middle">
+				Paramètres envoyés en format JSON
+			</td>
+			<td class="align-middle">
+				Ajoute un nouveau utilisateur en base de données. Il retourne ensuite l'utilisateur une fois la modification appliquée.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				edit
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-info">PATCH</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}</br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_users_edit', { 'id': 9}) }}">{{ path('api_v1_users_edit', { 'id': 9}) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier <br>
+				Paramètres envoyés en format JSON
+			</td>
+			<td class="align-middle">
+				Vérifie si l'utilisateur dont l'id est fourni en url existe, puis modifie uniquement les paramètres fournis. Il retourne ensuite l'utilisateur une fois la modification appliquée.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				delete
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-danger">DELETE</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}</br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_users_delete', { 'id': 0}) }}">{{ path('api_v1_users_delete', { 'id': 0}) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si  de l'utilisateur dont l'id est fourni en url existe, puis le supprime et retourne ensuite un message JSON si la suppression a fonctionnée.
+			</td>
+		</tr>
+	</tbody>
+</table><br>
+	<div class="row">
+		<div class="col-6">
+		<b>Example de json pour la création d'un utilisateur </b>(<i class="text-danger">requis</i> | <i class="text-primary">optionnel</i>): <br>
+		<strong class="text-danger">{</strong>
+		<br>
+			<p class="text-danger pl-3 mb-0">"email": "machin@machin.com",<br>
+			"password": "password",<br>
+			"pseudo": "machin",</p>
+			<p class="text-primary pl-3 mb-0">"firstname": "Ma",<br>
+			"lastname": "Chin",<br>
+			"description": "Ecolo engâgé !",<br>
+			"birthdate": "1925-12-25",<br>
+			"avatar": "machin.jpg"</p>
+		<strong class="text-danger">}</strong>
+		</div>
+		<div class="col-6">
+		<b>Example de json pour la modification d'un utilisateur </b>(<i class="text-primary">optionnel</i>): <br>
+		<strong class="text-danger">}</strong>
+		<br>
+			<p class="text-primary pl-3 mb-0">"email": "machin@machin.com",<br>
+			"password": "password",<br>
+			"pseudo": "machin",<br>
+			"firstname": "Ma",<br>
+			"lastname": "Chin",<br>
+			"description": "Ecolo engâgé !",<br>
+			"birthdate": "1925-12-25",<br>
+			"avatar": "machin.jpg"<br>
+			"experience": 20,<br>
+			"credit": 10,<br>
+			"status": 1,</p>
+		<strong class="text-danger">}</strong>
+		</div>
 	</div>
+	<h2 class="text-center bg-dark text-light mt-3 mb-3 p-3">Pour la gestion des événements (ApiEventController)</h2>
+<table class="table table-striped text-center">
+	<thead>
+		<tr>
+			<th scope="col" class="text-center">Titre</th>
+			<th scope="col">Méthode</th>
+			<th scope="col">Route</th>
+			<th scope="col">Variables</th>
+			<th scope="col">Détails</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row" class="align-middle">
+				checkEventId
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-secondary">NA</strong>
+			</td>
+			<td class="align-middle">
+				Pas de route car cette fonction n'est utilisée qu'au sein du controller
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si un événement avec {id} fourni en url existe. S'il existe, retourne l'événement en réponse.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				isAuthorOrAdmin
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/event/{id_event}/author_admin/{id_user}<br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_event_author_admin', { 'id_event': 10, 'id_user': 9 }) }}">{{ path('api_v1_event_author_admin', { 'id_event': 10, 'id_user': 9 }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id_event} : entier<br>
+				{id_user} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si l'événement dont l'id est fourni en url existe. S'il existe, cherche si l'utilisateur dont l'id est fourni en url est l'organisateur. S'il ne l'est pas, vérifie alors si il est Admin.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				list
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events<br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_events_list') }}">{{ path('api_v1_events_list') }}</a>
+			</td>
+			<td class="align-middle">
+				NA
+			</td>
+			<td class="align-middle">
+				Affiche tous les événements en base en version filtrée (sans les infos utilisateurs sensibles).
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				listAdmin
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				<a href="{{ path('api_v1_events_list_admin') }}">{{ path('api_v1_events_list_admin') }}</a>
+			</td>
+			<td class="align-middle">
+				NA
+			</td>
+			<td class="align-middle">
+				Affiche tous les événements en base avec toutes les données utilisateur (restreint aux Administrateurs)
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				show
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events/{id} <br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_event_show', { 'id' : 10 }) }}">{{ path('api_v1_event_show', { 'id' : 10 }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Affiche un événement en version filtrée (sans les infos utilisateurs sensibles).
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				showAdmin
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events/{id}/admin <br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_event_show_admin', { 'id' : 10 }) }}">{{ path('api_v1_event_show_admin', { 'id' : 10 }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				 Affiche un événement avec toutes les données utilisateur (restreint aux Administrateurs)
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				new
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-primary">POST</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events <br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_event_new') }}">{{ path('api_v1_event_new') }}</a>
+			</td>
+			<td class="align-middle">
+				Paramètres envoyés en format JSON
+			</td>
+			<td class="align-middle">
+				Ajoute un nouvel événement (restreint aux Administrateurs et Organisateurs)
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				edit
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-info">PATCH</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events/{id} <br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_events_edit', { 'id' : 0 }) }}">{{ path('api_v1_events_edit' , { 'id' : 0 }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier <br>
+				Paramètres envoyés en format JSON
+			</td>
+			<td class="align-middle">
+				Modifie un événement (restreint aux Administrateurs et Organisateurs)
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				delete
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-danger">DELETE</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/events/{id} <br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_events_delete', { 'id' : 0 }) }}">{{ path('api_v1_events_delete' , { 'id' : 0 }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si l'événement existe.
+				Si oui il le supprime (restreint aux Administrateurs et Organisateurs).
+				Sinon il renvoit une erreur en JSON pour signaler que l'événement n'existe pas.
+			</td>
+		</tr>
+	</tbody>
+</table>
+	<div class="row">
+		<div class="col-6">
+		<b>Example de JSON pour la création d'un événement</b> (<i class="text-danger">requis</i> | <i class="text-primary">optionnel</i>) : <br>
+		<strong class="text-danger">{</strong><br>
+			<p class="text-danger pl-3 mb-0">
+				"typeEvent": "Atelier",<br>
+				"title": "Apprendre la permaculture",<br>
+				"description": "Informations complémentaires...",<br>
+				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
+				"painfulness": 2,<br>
+				"duration": 3,<br>
+				"impactSocietal": 1,<br>
+				"impactEnvironmental": 4,<br>
+				"userMin": 50,<br>
+				"userMax": 100,<br>
+				"city": "Ville où se passe l'événement",<br>
+				"latitude": "45.55447",<br>
+				"longitude": "3.45412",<br>
+				"author": 14,<br></p>
+			<p class="text-primary pl-3 mb-0">
+				"adress": "Adresse de l'événement"<br>
+				"image": "image.jpg"<br>
+				"bonus": 2,<br>
+			</p>
+			<strong class="text-danger">}</strong>
+		</div>
+		<div class="col-6">
+			<b>Example de JSON pour la modification d'un événement</b> (<i class="text-primary">optionnel</i>) : <br>
+			<strong class="text-danger">{</strong>
+			<br>
+			<p class="text-primary pl-3 mb-0">
+				"typeEvent": "Atelier",<br>
+				"title": "Apprendre la permaculture",<br>
+				"description": "Informations complémentaires...",<br>
+				"status": "Planifié",<br>
+				"dateEvent": "2020-01-25T17:00:00+01:00",<br>
+				"painfulness": 2,<br>
+				"duration": 3,<br>
+				"impactSocietal": 1,<br>
+				"impactEnvironmental": 4,<br>
+				"userMin": 50,<br>
+				"userMax": 100,<br>
+				"city": "Ville où se passe l'événement",<br>
+				"latitude": "45.55447",<br>
+				"longitude": "3.45412",<br>
+				"author": 14,<br>
+				"adress": "Adresse de l'événement"<br>
+				"image": "image.jpg"<br>
+				"bonus": 2,<br>
+			</p>
+			<strong class="text-danger">}</strong>
+		</div>
+	</div>
+	{% endif %}
 {% endblock %}
