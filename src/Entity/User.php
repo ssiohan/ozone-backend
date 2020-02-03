@@ -160,7 +160,6 @@ class User implements UserInterface
      */
     public function serialize(): string
     {
-        // add $this->salt too if you don't use Bcrypt or Argon2i
         return serialize([$this->avatar]);
     }
 
@@ -169,7 +168,6 @@ class User implements UserInterface
      */
     public function unserialize($serialized): void
     {
-        // add $this->salt too if you don't use Bcrypt or Argon2i
         [$this->avatar] = unserialize($serialized, ['allowed_classes' => false]);
     }
 

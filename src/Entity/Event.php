@@ -169,14 +169,20 @@ class Event
         return (string) $this->getTitle();
     }
 
-    public function serialize()
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
     {
-        return serialize($this->id);
+        return serialize([$this->image]);
     }
 
-    public function unserialize($serialized)
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized): void
     {
-        $this->id = unserialize($serialized);
+        [$this->image] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     public function getId(): ?int
