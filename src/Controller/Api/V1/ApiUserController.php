@@ -65,9 +65,9 @@ class ApiUserController extends AbstractController
     }
 
     /**
-     * @Route("/get_user_id/{email}", name="user_id", methods={"GET"})
+     * @Route("/get_user_id/{email}", name="get_user_id", methods={"GET"})
      */
-    public function getId($email)
+    public function getUserId($email)
     {
         // On récupère l'utilisateur en base de données
         $entityManager = $this->getDoctrine()->getManager();

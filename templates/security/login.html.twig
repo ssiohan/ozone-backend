@@ -7,15 +7,15 @@
 
 	<form method="post">
 		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			<div class="alert alert-danger text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 		{% endif %}
 
 		<div class="container p-3 text-center col-8">
 			<h1 class="h3 mb-3 font-weight-normal alert alert-warning">Vous pouvez dès à présent vous connecter !</h1>
-			<div class="container col-6">
+			<div class="container col-8">
 				<label class="h5" for="inputEmail">Email</label>
 				<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control text-center mb-3" required autofocus>
-				<label class="h5" for="inputPassword">Password</label>
+				<label class="h5" for="inputPassword">Mot de passe</label>
 				<input type="password" name="password" id="inputPassword" class="form-control text-center mb-3" required>
 
 				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -29,7 +29,7 @@
 
 
 				<button class="btn btn-lg btn-primary" type="submit">
-					Sign in
+					Se connecter
 				</button>
 			</div>
 		</div>
