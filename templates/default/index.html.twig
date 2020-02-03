@@ -78,6 +78,26 @@
 		</tr>
 		<tr>
 			<th scope="row" class="align-middle">
+				getUserId
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/get_user_id/{email}<br/> 
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}">{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}</a>
+			</td>
+			<td class="align-middle">
+				{email} : chaîne de caractères
+			</td>
+			<td class="align-middle">
+				Retourne l'ID de l'utilisateur dont l'email est fourni en paramètre de l'url
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
 				isAdmin
 			</th>
 			<td class="align-middle">

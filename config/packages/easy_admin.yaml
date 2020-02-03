@@ -103,6 +103,7 @@ easy_admin:
         fields:
           - { label: 'Nom', property: 'name' }
           - { label: 'Label', property: 'label' }
+
   # Gestion de l'affichage de l'avater et du nom de l'user connecté
   user:
     # this method/property must return the string representation of the user

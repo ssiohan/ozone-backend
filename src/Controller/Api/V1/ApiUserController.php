@@ -2,11 +2,13 @@
 
 namespace App\Controller\Api\V1;
 
+use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\UserRole;
 use App\Form\UserType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Repository\UserRoleRepository;
 use DateTime;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,9 +67,9 @@ class ApiUserController extends AbstractController
     }
 
     /**
-     * @Route("/get_user_id/{email}", name="user_id", methods={"GET"})
+     * @Route("/get_user_id/{email}", name="get_user_id", methods={"GET"})
      */
-    public function getId($email)
+    public function getUserId($email)
     {
         // On récupère l'utilisateur en base de données
         $entityManager = $this->getDoctrine()->getManager();
@@ -145,6 +147,51 @@ class ApiUserController extends AbstractController
                 "has" => (bool) $isRole,
                 "role" => (string) $role
             ]);
+        }
+    }
+
+    /**
+     * Mise à jour automatique des relations dans la table UserRole,
+     * par rapport aux rôles fournis dans le champ rôles de la table User.
+     */
+    public function setUserRoles($id)
+    {
+        // Récupération des différents Repositories nécéssaires
+        $em = $this->getDoctrine()->getManager();
+        $userRoleRepository = $em->getRepository(UserRole::class);
+        $roleRepository = $em->getRepository(Role::class);
+        $userRepository = $em->getRepository(User::class);
+
+        // On récupère l'user dont l'id est fourni
+        $user = $userRepository->findOneBy(['id' => $id]);
+        // On récupère ses rôles présents dans le champ rôles User
+        $userRoles = $user->getRoles();
+
+        // Pour chacun des rôles on vérifie si une relation existe déjà dans la table user_role
+        // Si çà n'existe pas on ajoute la relation, si elle existe déjà on ne fait rien
+        foreach ($userRoles as $userRole) {
+            $thisUserRoles[] = $roleRepository->findOneBy(['name' => $userRole]);
+            foreach ($thisUserRoles as $role) {
+                $roleExist = $userRoleRepository->findBy(['user' => $id, 'role' => $role]);
+
+                // Récupérer l'équivalent de $roleExist via Custom Query
+                // $query = $em->createQuery(
+                //     'SELECT ur
+                //     FROM App\Entity\UserRole ur
+                //     WHERE ur.user = :idu
+                //     AND ur.role = :idr '
+                // )->setParameter('idu', $id)->setParameter('idr', $role);
+                // $resultat = $query->getResult();
+                // dd($resultat);
+
+                if (empty($roleExist)) {
+
+                    $userRole = new UserRole();
+                    $userRole->setUser($user)->setRole($role);
+                    $em->persist($userRole);
+                    $em->flush();
+                }
+            }
         }
     }
 
@@ -284,6 +331,10 @@ class ApiUserController extends AbstractController
                 // On met à jour l'user en database
                 $em->persist($user);
                 $em->flush();
+
+                // Mise à jour auto des rôles lors de l'edition de l'user
+                $this->setUserRoles($id);
+
                 return $this->json(
                     $user,
                     201,
