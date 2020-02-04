@@ -3,6 +3,7 @@
 namespace App\Controller\Api\V1;
 
 use App\Entity\Role;
+use App\Entity\EventUser;
 use App\Entity\User;
 use App\Entity\UserRole;
 use App\Form\UserType;
@@ -254,11 +255,16 @@ class ApiUserController extends AbstractController
                 $user,
                 $user->getPassword()
             ));
-            
+
             // On ajoute le ROLE_USER dans le champ rôles de l'User
             $user->setRoles(["ROLE_USER"]);
+
+            // On définit une image par defaut si aucune n'est pas fournie
+            if ($user->getAvatar() == null) {
+                $user->setAvatar("user-default.png");
+            }
             // On créé le nouvel utilisateur en base de données,
-            // il récupère donc un "id" auto-increment
+            // il récupère donc un "id" auto-increment           
             $em->persist($user);
             $em->flush();
 
@@ -366,6 +372,44 @@ class ApiUserController extends AbstractController
                 [],
                 ['groups' => 'users_list']
             );
+        }
+    }
+
+    /**
+     * @Route("/users/{id}/has_subscribed/{event}", name="user_has_subscribed", methods={"GET"})
+     */
+    public function userHasSubscribed($id, $event)
+    {
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
+
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
+        } else {
+            // récupère l'id de l'event spécifié
+            $em = $this->getDoctrine()->getManager();
+
+            // on cherche une instance de l'event et de l'utilisateur dans l'entité EventUser
+            $isSubscribed = $em->getRepository(EventUser::class)->findOneBy([
+                'user' => $id,
+                'event' => $event
+            ]);
+
+            //si la recherche ne trouve rien, elle retourne null
+            if ($isSubscribed != null) {
+                $isSubscribed = TRUE;
+            } else {
+                $isSubscribed = FALSE;
+            }
+
+            return new JsonResponse([
+                "subscribed" => (bool) $isSubscribed,
+                "event" => (int) $event
+            ]);
         }
     }
 }
