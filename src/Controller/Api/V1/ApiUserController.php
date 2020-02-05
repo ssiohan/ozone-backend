@@ -196,6 +196,87 @@ class ApiUserController extends AbstractController
             }
         }
     }
+    /**
+     * @Route("/users/{id}/has_subscribed/{event}", name="user_has_subscribed", methods={"GET"})
+     */
+    public function userHasSubscribed($id, $event)
+    {
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
+
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        if (is_a($user, JsonResponse::class)) {
+            return $user;
+        } else {
+            // récupère l'id de l'event spécifié
+            $em = $this->getDoctrine()->getManager();
+
+            // on cherche une instance de l'event et de l'utilisateur dans l'entité EventUser
+            $isSubscribed = $em->getRepository(EventUser::class)->findOneBy([
+                'user' => $id,
+                'event' => $event
+            ]);
+
+            //si la recherche ne trouve rien, elle retourne null
+            if ($isSubscribed != null) {
+                $isSubscribed = TRUE;
+            } else {
+                $isSubscribed = FALSE;
+            }
+
+            return new JsonResponse(["isSub" => $isSubscribed]);
+        }
+    }
+
+    /**
+     * ajout des relations dans la table EventUser
+     * @Route("/users/{id}/user_subscribe/{event}", name="user_subscribe", methods={"POST"})
+     */
+    public function setUserEvent($id, $event, ApiEventController $AEC)
+    {
+        // On check si le user id est valide et existe en database
+        // S'il existe checkUserId() retourne le $user au format Object
+        $user = $this->checkUserId($id);
+        $event = $AEC->checkEventId($event);
+
+        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
+        // Cela veut dire que checkUserId a rencontré une erreur,
+        // on retourne donc le code d'erreur correspondant
+        // idem pour l'event
+        if ((is_a($user, JsonResponse::class))) {
+            return $user;
+        } elseif (is_a($event, JsonResponse::class)) {
+            return $event;
+        } else {
+            // Récupération des différents Repositories nécéssaires
+            $em = $this->getDoctrine()->getManager();
+            $eventRepository = $em->getRepository(Event::class);
+            $userRepository = $em->getRepository(User::class);
+
+            // On récupère l'user dont l'id est fourni
+            $user = $userRepository->findOneBy(['id' => $id]);
+
+            // On récupère l'event dont l'id est fourni
+            $event = $eventRepository->findOneBy(['id' => $event]);
+
+            // On vérifie si l'user a déjà soucris à l'event ou pas
+            if (
+                $this->userHasSubscribed($id, $event)
+                ->getContent('isSub') == '{"isSub":true}'
+            ) {
+                return new JsonResponse("utilisateur déja inscrit");
+            } else {
+                $EventUser = new EventUser();
+                $EventUser->setUser($user)->setEvent($event);
+                $em->persist($EventUser);
+                $em->flush();
+                return new JsonResponse("création nouveau participant");
+            }
+        }
+    }
 
     /**
      * @Route("/users", name="users_list", methods={"GET"})
@@ -374,88 +455,6 @@ class ApiUserController extends AbstractController
                 [],
                 ['groups' => 'users_list']
             );
-        }
-    }
-
-    /**
-     * @Route("/users/{id}/has_subscribed/{event}", name="user_has_subscribed", methods={"GET"})
-     */
-    public function userHasSubscribed($id, $event)
-    {
-        // On check si le user id est valide et existe en database
-        // S'il existe checkUserId() retourne le $user au format Object
-        $user = $this->checkUserId($id);
-
-        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
-        // Cela veut dire que checkUserId a rencontré une erreur,
-        // on retourne donc le code d'erreur correspondant
-        if (is_a($user, JsonResponse::class)) {
-            return $user;
-        } else {
-            // récupère l'id de l'event spécifié
-            $em = $this->getDoctrine()->getManager();
-
-            // on cherche une instance de l'event et de l'utilisateur dans l'entité EventUser
-            $isSubscribed = $em->getRepository(EventUser::class)->findOneBy([
-                'user' => $id,
-                'event' => $event
-            ]);
-
-            //si la recherche ne trouve rien, elle retourne null
-            if ($isSubscribed != null) {
-                $isSubscribed = TRUE;
-            } else {
-                $isSubscribed = FALSE;
-            }
-
-            return new JsonResponse(["isSub" => $isSubscribed]);
-        }
-    }
-
-    /**
-     * ajout des relations dans la table EventUser
-     * @Route("/users/{id}/user_subscribe/{event}", name="user_subscribe", methods={"POST"})
-     */
-    public function setUserEvent($id, $event, ApiEventController $AEC)
-    {
-        // On check si le user id est valide et existe en database
-        // S'il existe checkUserId() retourne le $user au format Object
-        $user = $this->checkUserId($id);
-        $event = $AEC->checkEventId($event);
-
-        // Si $user est un Object JsonResponse on l'envoi en réponse HTTP JSON
-        // Cela veut dire que checkUserId a rencontré une erreur,
-        // on retourne donc le code d'erreur correspondant
-        // idem pour l'event
-        if ((is_a($user, JsonResponse::class))) {
-            return $user;
-        } elseif (is_a($event, JsonResponse::class)) {
-            return $event;
-        } else {
-            // Récupération des différents Repositories nécéssaires
-            $em = $this->getDoctrine()->getManager();
-            $eventRepository = $em->getRepository(Event::class);
-            $userRepository = $em->getRepository(User::class);
-
-            // On récupère l'user dont l'id est fourni
-            $user = $userRepository->findOneBy(['id' => $id]);
-
-            // On récupère l'event dont l'id est fourni
-            $event = $eventRepository->findOneBy(['id' => $event]);
-
-            // On vérifie si l'user a déjà soucris à l'event ou pas
-            if (
-                $this->userHasSubscribed($id, $event)
-                ->getContent('isSub') == '{"isSub":true}'
-            ) {
-                return new JsonResponse("utilisateur déja inscrit");
-            } else {
-                $EventUser = new EventUser();
-                $EventUser->setUser($user)->setEvent($event);
-                $em->persist($EventUser);
-                $em->flush();
-                return new JsonResponse("création nouveau participant");
-            }
         }
     }
 }
