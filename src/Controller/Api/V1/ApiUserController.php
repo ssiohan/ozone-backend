@@ -138,7 +138,7 @@ class ApiUserController extends AbstractController
                 'role' => $idRole
             ]);
 
-            //si la recherche ne trouve rien, elle retourne null
+            // Si la recherche ne trouve rien, elle retourne null
             if ($isRole != null) {
                 $isRole = TRUE;
             } else {
