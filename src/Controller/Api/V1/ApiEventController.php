@@ -56,7 +56,7 @@ class ApiEventController extends AbstractController
         }
     }
 
-     /**
+    /**
      * @Route("/event/{id_event}/author_admin/{id_user}", name="event_author_admin", methods={"GET"})
      */
     public function isAuthorOrAdmin($id_event, $id_user, RoleRepository $roleRepository)
@@ -65,8 +65,7 @@ class ApiEventController extends AbstractController
         $author_id = $event->getAuthor()->getid();
 
         // Si l'utilisateur est l'auteur de l'événement
-        if($author_id == $id_user)
-        {
+        if ($author_id == $id_user) {
             return new JsonResponse(['author' => TRUE]);
         }
         $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
@@ -77,14 +76,13 @@ class ApiEventController extends AbstractController
             'role' => $idRoleAdmin
         ]);
         //si l'utilisateur est un ROLE_ADMIN
-        if($isAdmin != null)
-        {
+        if ($isAdmin != null) {
             return new JsonResponse(['author' => FALSE, 'admin' => TRUE]);
-        }else{
+        } else {
             return new JsonResponse(['author' => FALSE, 'admin' => FALSE]);
         }
     }
-    
+
     /**
      * @Route("/events", name="events_list", methods={"GET"})
      */
@@ -98,7 +96,7 @@ class ApiEventController extends AbstractController
             ['groups' => 'events_list']
         );
     }
-    
+
     /**
      * @Route("/events/admin", name="events_list_admin", methods={"GET"})
      * @isGranted("ROLE_ADMIN")
@@ -187,6 +185,14 @@ class ApiEventController extends AbstractController
 
         // On définit l'user récupéré comme créateur de l'event
         $event->setAuthor($user);
+
+        // dd($eventArray);
+
+        // On définit une image par defaut si aucune n'est pas fournie
+        if (!array_key_exists('image', $eventArray)) {
+            $eventArray += ["image" => "event-default.png"];
+            $event->setImage($eventArray['image']);
+        }
 
         // On créé le nouvel événement en base de données,
         // il récupère donc un "id" auto-increment

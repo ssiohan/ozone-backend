@@ -78,6 +78,70 @@
 		</tr>
 		<tr>
 			<th scope="row" class="align-middle">
+				getUserId
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/get_user_id/{email}<br/> 
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}">
+				{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}</a>
+			</td>
+			<td class="align-middle">
+				{email} : chaîne de caractères
+			</td>
+			<td class="align-middle">
+				Retourne l'ID de l'utilisateur dont l'email est fourni en paramètre de l'url
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				isAdmin
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}/is_admin<br/> 
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_user_is_admin', { 'id': 9 }) }}">
+				{{ path('api_v1_user_is_admin', { 'id': 9 }) }}</a>
+			</td class="align-middle">
+			<td class="align-middle">
+				{id} : entier
+			</td>
+			<td class="align-middle">
+				Vérifie si l'utilisateur dont l'id est fourni en paramètre d'url est Administrateur. 
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
+				userHasRole
+			</th>
+			<td class="align-middle">
+				<strong class="btn btn-success">GET</strong>
+			</td>
+			<td class="align-middle">
+				<strong>Structure :</strong><br>
+				/api/v1/users/{id}/has_role/{role}</br>
+				<strong>Exemple :</strong><br>
+				<a href="{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN'}) }}">
+				{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN' }) }}</a>
+			</td>
+			<td class="align-middle">
+				{id} : entier<br/>
+				{role} : chaine de caractères
+			</td>
+			<td class="align-middle">
+				Permet de tester si un {role} spécifique est attribué à un {id} utilisateur fourni en url.
+			</td>
+		</tr>
+		<tr>
+			<th scope="row" class="align-middle">
 				setUserRoles
 			</th>
 			<td class="align-middle">
@@ -98,63 +162,45 @@
 		</tr>
 		<tr>
 			<th scope="row" class="align-middle">
-				getUserId
+				userHasSubscribed
 			</th>
 			<td class="align-middle">
 				<strong class="btn btn-success">GET</strong>
 			</td>
 			<td class="align-middle">
 				<strong>Structure :</strong><br>
-				/api/v1/get_user_id/{email}<br/> 
+				/api/v1/users/{id}/has_subscribed/{event}</br>
 				<strong>Exemple :</strong><br>
-				<a href="{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}">{{ path('api_v1_get_user_id', { 'email': 'admin@ozone.io' }) }}</a>
+				<a href="{{ path('api_v1_user_has_subscribed', { 'id': 9, 'event': 3}) }}">
+				{{ path('api_v1_user_has_subscribed', { 'id': 9, 'event': 3}) }}</a>
 			</td>
-			<td class="align-middle">
-				{email} : chaîne de caractères
-			</td>
-			<td class="align-middle">
-				Retourne l'ID de l'utilisateur dont l'email est fourni en paramètre de l'url
-			</td>
-		</tr>
-		<tr>
-			<th scope="row" class="align-middle">
-				isAdmin
-			</th>
-			<td class="align-middle">
-				<strong class="btn btn-success">GET</strong>
-			</td>
-			<td class="align-middle">
-				<strong>Structure :</strong><br>
-				/api/v1/users/{id}/is_admin<br/> 
-				<strong>Exemple :</strong><br>
-				<a href="{{ path('api_v1_user_is_admin', { 'id': 9 }) }}">{{ path('api_v1_user_is_admin', { 'id': 9 }) }}</a>
-			</td class="align-middle">
 			<td class="align-middle">
 				{id} : entier
+				{event} : entier
 			</td>
 			<td class="align-middle">
-				Vérifie si l'utilisateur dont l'id est fourni en paramètre d'url est Administrateur. 
+				Vérifie si un utilisateur est inscrit à un événement.
 			</td>
 		</tr>
 		<tr>
 			<th scope="row" class="align-middle">
-				userHasRole
+				setUserEvent
 			</th>
 			<td class="align-middle">
-				<strong class="btn btn-success">GET</strong>
+				<strong class="btn btn-primary">POST</strong>
 			</td>
 			<td class="align-middle">
 				<strong>Structure :</strong><br>
-				/api/v1/users/{id}/has_role/{role}</br>
+				/api/v1/users/{id}/user_subscribe/{event}</br>
 				<strong>Exemple :</strong><br>
-				<a href="{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN'}) }}">{{ path('api_v1_user_has_role', { 'id': 9, 'role': 'ROLE_ADMIN' }) }}</a>
+				<a href="{{ path('api_v1_user_subscribe', { 'id': 9, 'event': 3}) }}">{{ path('api_v1_user_subscribe', { 'id': 9, 'event': 3}) }}</a>
 			</td>
 			<td class="align-middle">
-				{id} : entier<br/>
-				{role} : chaine de caractères
+				{id} : entier
+				{event} : entier
 			</td>
 			<td class="align-middle">
-				Permet de tester si un {role} spécifique est attribué à un {id} utilisateur fourni en url.
+				Inscrit un utilisateur à un événement.
 			</td>
 		</tr>
 		<tr>
@@ -315,7 +361,8 @@
 				{id} : entier
 			</td>
 			<td class="align-middle">
-				Vérifie si un événement avec {id} fourni en url existe. S'il existe, retourne l'événement en réponse.
+				Vérifie si un événement existe.
+				S'il existe, retourne l'événement en réponse.
 			</td>
 		</tr>
 		<tr>
@@ -336,7 +383,9 @@
 				{id_user} : entier
 			</td>
 			<td class="align-middle">
-				Vérifie si l'événement dont l'id est fourni en url existe. S'il existe, cherche si l'utilisateur dont l'id est fourni en url est l'organisateur. S'il ne l'est pas, vérifie alors si il est Admin.
+				Vérifie si l'événement existe.
+				S'il existe, cherche si l'utilisateur est l'organisateur.
+				S'il ne l'est pas, vérifie alors si il est Admin.
 			</td>
 		</tr>
 		<tr>
