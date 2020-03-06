@@ -47,7 +47,7 @@ class ApiUserController extends AbstractController
         // en testant que $id est bien de type numeric
         if (!is_numeric($id)) {
             return new JsonResponse(
-                ['error' => "ID({$id}) format invalide !"],
+                ['error' => "ID({$id}) format invalide ! (attendu : nombre)"],
                 Response::HTTP_BAD_REQUEST
             );
         } else {
@@ -267,13 +267,13 @@ class ApiUserController extends AbstractController
                 $this->userHasSubscribed($id, $event)
                 ->getContent('isSub') == '{"isSub":true}'
             ) {
-                return new JsonResponse("utilisateur déja inscrit");
+                return new JsonResponse("Cet utilisateur est déja inscrit !");
             } else {
                 $EventUser = new EventUser();
                 $EventUser->setUser($user)->setEvent($event);
                 $em->persist($EventUser);
                 $em->flush();
-                return new JsonResponse("création nouveau participant");
+                return new JsonResponse("Participation à l'événement ajoutée !");
             }
         }
     }
@@ -363,7 +363,7 @@ class ApiUserController extends AbstractController
         } catch (UniqueConstraintViolationException $uniqueException) {
             return $this->json([
                 'status' => 400,
-                'alert' => 'Email ou pseudo déjà utilisé !',
+                'alert' => 'L\'email ou le pseudo choisi existe déjà !',
                 'error_message' => $uniqueException->getMessage()
             ], 400);
         }
@@ -427,7 +427,7 @@ class ApiUserController extends AbstractController
             } catch (UniqueConstraintViolationException $uniqueException) {
                 return $this->json([
                     'status' => 400,
-                    'alert' => 'This email or username already exist in database !',
+                    'alert' => 'L\'email ou le pseudo choisi existe déjà !',
                     'error_message' => $uniqueException->getMessage()
                 ], 400);
             }
@@ -450,7 +450,7 @@ class ApiUserController extends AbstractController
             $em->flush();
             // On retourne un message JSON qui informe de la suppression du $user
             return $this->json(
-                "User '{$user->getUsername()}' has been successfully deleted !",
+                "User '{$user->getUsername()}' a été correctement supprimé !",
                 200,
                 [],
                 ['groups' => 'users_list']

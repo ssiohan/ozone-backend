@@ -35,7 +35,7 @@ class ApiEventController extends AbstractController
         // en testant que $id est bien de type numeric
         if (!is_numeric($id)) {
             return new JsonResponse(
-                ['error' => "Event ID '{$id}' not valid !"],
+                ['error' => "ID({$id}) format invalide ! (attendu : nombre)"],
                 Response::HTTP_BAD_REQUEST
             );
         } else {
@@ -46,7 +46,7 @@ class ApiEventController extends AbstractController
             // on retourne une erreur 400 en JSON
             if (empty($event)) {
                 return new JsonResponse(
-                    ['error' => "Event with ID '{$id}' not found !"],
+                    ['error' => "ID({$id}) n'existe pas !"],
                     Response::HTTP_BAD_REQUEST
                 );
             } else {
@@ -186,8 +186,6 @@ class ApiEventController extends AbstractController
         // On définit l'user récupéré comme créateur de l'event
         $event->setAuthor($user);
 
-        // dd($eventArray);
-
         // On définit une image par defaut si aucune n'est pas fournie
         if (!array_key_exists('image', $eventArray)) {
             $eventArray += ["image" => "event-default.png"];
@@ -224,8 +222,8 @@ class ApiEventController extends AbstractController
 
             // On verifie si la clef date_event a été fournie dans la requête
             // Si oui on convertit la date au format DateTime à partir de ('Y-m-d')
-            // On refresh la date d'event fournie ou
-            // sinon on remet la date qui existait déjà.
+            // On refresh la date d'event fournie
+            // Sinon on remet la date qui existait déjà.
             if (array_key_exists('date_event', $eventJson)) {
                 $event->setDateEvent(new DateTime($eventJson['date_event']));
             }
@@ -268,9 +266,9 @@ class ApiEventController extends AbstractController
             // Si l'event existe on le supprime de la database                        
             $em->remove($event);
             $em->flush();
-            // On retourne un message JSON qui informe de la suppression du $event
+            // On retourne un message JSON qui informe de la suppression de l'event
             return $this->json(
-                "Event '{$event->getTitle()}' has been successfully deleted !",
+                "L'événement '{$event->getTitle()}' a bien été supprimé !",
                 200,
                 [],
                 ['groups' => 'users_list']
