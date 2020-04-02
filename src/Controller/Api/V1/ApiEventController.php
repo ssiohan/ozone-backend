@@ -66,7 +66,7 @@ class ApiEventController extends AbstractController
 
         // Si l'utilisateur est l'auteur de l'événement
         if ($author_id == $id_user) {
-            return new JsonResponse(['author' => TRUE]);
+            return new JsonResponse(['author' => true]);
         }
         $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
         //on va chercher si l'utilisateur est un ROLE_ADMIN
@@ -75,11 +75,11 @@ class ApiEventController extends AbstractController
             'user' => $id_user,
             'role' => $idRoleAdmin
         ]);
-        //si l'utilisateur est un ROLE_ADMIN
+        // Si l'utilisateur est un ROLE_ADMIN
         if ($isAdmin != null) {
-            return new JsonResponse(['author' => FALSE, 'admin' => TRUE]);
+            return new JsonResponse(['author' => false, 'admin' => true]);
         } else {
-            return new JsonResponse(['author' => FALSE, 'admin' => FALSE]);
+            return new JsonResponse(['author' => false, 'admin' => false]);
         }
     }
 
