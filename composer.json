@@ -7,7 +7,7 @@
         "ext-iconv": "*",
         "easycorp/easyadmin-bundle": "^2.3",
         "gesdinet/jwt-refresh-token-bundle": "^0.9.0",
-        "lexik/jwt-authentication-bundle": "^2.6",
+        "lexik/jwt-authentication-bundle": "^2.7",
         "nelmio/cors-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.5",
         "symfony/asset": "5.0.*",
