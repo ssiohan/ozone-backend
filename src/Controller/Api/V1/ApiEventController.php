@@ -69,13 +69,13 @@ class ApiEventController extends AbstractController
             return new JsonResponse(['author' => true]);
         }
         $idRoleAdmin = $roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
-        //on va chercher si l'utilisateur est un ROLE_ADMIN
+        // On va chercher si l'utilisateur a possède le 'ROLE_ADMIN'
         $entityManager = $this->getDoctrine()->getManager();
         $isAdmin = $entityManager->getRepository(UserRole::class)->findOneBy([
             'user' => $id_user,
             'role' => $idRoleAdmin
         ]);
-        // Si l'utilisateur est un ROLE_ADMIN
+        // Si l'utilisateur possède le 'ROLE_ADMIN'
         if ($isAdmin != null) {
             return new JsonResponse(['author' => false, 'admin' => true]);
         } else {
@@ -108,7 +108,10 @@ class ApiEventController extends AbstractController
             $events,
             200,
             [],
-            ['groups' => 'events_list_admin']
+            ['groups' => [
+                'events_list',
+                'events_list_admin'
+            ]]
         );
     }
 
@@ -151,12 +154,15 @@ class ApiEventController extends AbstractController
         if (is_a($event, JsonResponse::class)) {
             return $event;
         } else {
-            // On retourne le $event en réponse HTTP JSON
+            // Sinon, on retourne le $event en réponse HTTP JSON
             return $this->json(
                 $event,
                 201,
                 [],
-                ['groups' => 'events_list_admin']
+                ['groups' => [
+                    'events_list',
+                    'events_list_admin'
+                ]]
             );
         }
     }
@@ -186,7 +192,7 @@ class ApiEventController extends AbstractController
         // On définit l'user récupéré comme créateur de l'event
         $event->setAuthor($user);
 
-        // On définit une image par defaut si aucune n'est pas fournie
+        // On définit une image par defaut si aucune n'a été fournie
         if (!array_key_exists('image', $eventArray)) {
             $eventArray += ["image" => "event-default.png"];
             $event->setImage($eventArray['image']);

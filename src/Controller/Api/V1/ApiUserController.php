@@ -96,6 +96,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}/is_admin", name="user_is_admin", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function isAdmin($id, RoleRepository $roleRepository)
     {
@@ -128,6 +129,7 @@ class ApiUserController extends AbstractController
 
     /**
      * @Route("/users/{id}/has_role/{role}", name="user_has_role", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function userHasRole($id, $role, RoleRepository $roleRepository)
     {
@@ -191,6 +193,7 @@ class ApiUserController extends AbstractController
     }
     /**
      * @Route("/users/{id}/has_subscribed/{event}", name="user_has_subscribed", methods={"GET"})
+     * @isGranted("ROLE_USER")
      */
     public function userHasSubscribed($id, $event)
     {
@@ -220,6 +223,7 @@ class ApiUserController extends AbstractController
     /**
      * ajout des relations dans la table EventUser
      * @Route("/users/{id}/user_subscribe/{event}", name="user_subscribe", methods={"POST"})
+     * @isGranted("ROLE_USER")
      */
     public function setUserEvent($id, $event, ApiEventController $apiEventController)
     {
